@@ -1,0 +1,24 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\WeaponScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\WeaponController.cs" Line="49" Column="5" />
+      <File FileName="Assets\Scripts\WeaponScript.cs" Line="102" Column="1" />
+      <File FileName="Assets\Scripts\LaserScript.cs" Line="32" Column="63" />
+      <File FileName="Assets\Scripts\MechInputHandler.cs" Line="25" Column="70" />
+      <File FileName="Assets\Scripts\RayBulletScript.cs" Line="29" Column="47" />
+      <File FileName="Assets\Scripts\HUDThrottleScript.cs" Line="22" Column="2" />
+      <File FileName="Assets\Scripts\AimReticleScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UIHeatDisplayScript.cs" Line="16" Column="86" />
+      <File FileName="Assets\Scripts\WeaponDisplayScript.cs" Line="23" Column="44" />
+      <File FileName="Assets\Scripts\ProgressBarScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UIEnergyDisplayScript.cs" Line="17" Column="3" />
+      <File FileName="Assets\Scripts\HUDCameraLagScript.cs" Line="21" Column="39" />
+      <File FileName="Assets\Scripts\MechController.cs" Line="95" Column="37" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
