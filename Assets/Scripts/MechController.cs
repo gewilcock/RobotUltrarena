@@ -5,6 +5,7 @@ public class MechController : MonoBehaviour {
 
 	//Script controls all major variables and mech systems
 
+	public GameObject deathExplosion;
 	//Reference scripts
 	private CharacterMotor mechMotor;
 	private WeaponController mechWeapons;
@@ -16,6 +17,7 @@ public class MechController : MonoBehaviour {
 
 	public float armourLevel = 100f;
 	public float maxArmour = 100f;
+	public float armourRatio{get; protected set;}
 
 	float armagelLevel;
 	public float maxArmagelLevel = 50f;
@@ -25,12 +27,11 @@ public class MechController : MonoBehaviour {
 	public Transform torsoBone;
 	public float torsoRotationRate=20f;
 	public float torsoAbsMaxRotation=90f;
-	float torsoRotation=0f;
+	public float torsoRotation;//{get;protected set;}
 
 	//variables for mech movement
 	public float mechTurnRate=10f;
-	public float throttleAdjustRate=0.2f;
-	float throttleLevel=0.5f;
+	public float throttleLevel{get; set;}
 	float maxThrottle=1f;
 	float minThrottle=-0.25f;
 
@@ -40,11 +41,18 @@ public class MechController : MonoBehaviour {
 	mechMotor = GetComponent <CharacterMotor>();
 	animations = GetComponentInChildren<Animation>();
 	mechWeapons=GetComponentInChildren<WeaponController>();
+	mechWeapons.myController=this;
 	isDead=false;
+	
+	throttleLevel=0.5f;
+	torsoRotation=0;
+	armourRatio=1;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
 
 		mechMotor.inputMoveDirection = transform.rotation*Vector3.forward*throttleLevel;
 		AssessDamage();
@@ -64,10 +72,10 @@ public class MechController : MonoBehaviour {
 		transform.Rotate (new Vector3(0f,mechTurnRate*Time.deltaTime*direction));
 	}
 
-	public void adjustThrottle(float direction){
-		if(direction != 0f){
-			throttleLevel=Mathf.Clamp(throttleLevel+(throttleAdjustRate*direction*Time.deltaTime),minThrottle,maxThrottle);
-		}
+	public void setThrottle(float newValue){
+
+
+		throttleLevel=Mathf.Clamp(newValue,minThrottle,maxThrottle);
 
 			
 	}
@@ -104,6 +112,7 @@ public class MechController : MonoBehaviour {
 
 	public void TakeDamage(float damage){
 		armourLevel-=damage;
+		armourRatio=armourLevel/maxArmour;
 	}
 
 	void AssessDamage(){
@@ -112,6 +121,8 @@ public class MechController : MonoBehaviour {
 				isDead=true;
 				mechWeapons.isDead=true;
 				allStop ();
+				GameObject weh=(GameObject)Instantiate (deathExplosion,torsoBone.position,Quaternion.identity);
+				weh.GetComponent<MechsplosionScript>().myParent=torsoBone;
 			}
 		}
 		else{

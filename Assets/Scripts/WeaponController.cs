@@ -4,7 +4,7 @@ using System.Collections;
 public class WeaponController : MonoBehaviour {
 
 	//heat variables
-
+	public MechController myController;
 	public float heatLevelMax = 100f;
 	public float heatSinkRate = 10f;
 	public float heatLevel{get; set;}
@@ -17,7 +17,7 @@ public class WeaponController : MonoBehaviour {
 	public WeaponScript[] weaponList = new WeaponScript[4];
 	public int weaponsPerGroup =2;
 	int[] groupCycle = new int[2];
-	
+
 
 	//Energy cache variables
 	public float energyLevel;
@@ -28,12 +28,6 @@ public class WeaponController : MonoBehaviour {
 	//Variables for aim calculation
 	public Vector3 aimPoint;
 	public Transform[] aimPivots = new Transform[2];
-
-
-
-	Vector3 targetDir;
-	float maxRotation=30f;
-
 
 
 	// Use this for initialization
@@ -65,14 +59,33 @@ public class WeaponController : MonoBehaviour {
 	
 	void LateUpdate () {
 		if(!isDead){
-		for(int i=0; i<aimPivots.Length; i++){
-			
-			targetDir = aimPoint - aimPivots[i].position;										 
-			
-			Quaternion rotation = Quaternion.LookRotation(targetDir);
-			
-			aimPivots[i].rotation = rotation;
-		}
+			for(int i=0; i<aimPivots.Length; i++){
+
+				Vector3 targetDir = aimPoint - aimPivots[i].position;										 
+
+				Quaternion testRotation=Quaternion.LookRotation (targetDir);
+
+				Quaternion baseRotation=transform.rotation*Quaternion.Euler (0f,-aimPivots[i].parent.localRotation.eulerAngles.x,0);
+
+
+				Quaternion relativeRot = testRotation *Quaternion.Inverse (baseRotation);
+
+				float dx = relativeRot.eulerAngles.x;
+				float dy;
+
+				if(relativeRot.eulerAngles.y<180f){
+					dy = Mathf.Clamp (relativeRot.eulerAngles.y,0,45f);
+				}
+				else{
+					dy = Mathf.Clamp (relativeRot.eulerAngles.y,315,360f);
+				}
+
+				//relativeRot.eulerAngles=new Vector3(dx,dy,0);
+
+				aimPivots[i].rotation = Quaternion.Euler (new Vector3(dx,dy,relativeRot.eulerAngles.z))*baseRotation;
+
+
+			}
 		}
 		
 	}
@@ -136,6 +149,7 @@ public class WeaponController : MonoBehaviour {
 
 		energyRatio=Mathf.Clamp (energyLevel/maxEnergyLevel,0f,1f);
 	}
+
 
 }
 

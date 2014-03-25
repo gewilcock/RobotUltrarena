@@ -47,15 +47,20 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AimReticleScript.cs" />
+     <Compile Include="Assets\Scripts\GlobalTargetList.cs" />
      <Compile Include="Assets\Scripts\HUDCameraLagScript.cs" />
+     <Compile Include="Assets\Scripts\HUDTargetBracketScript.cs" />
      <Compile Include="Assets\Scripts\HUDThrottleScript.cs" />
      <Compile Include="Assets\Scripts\ImpactEmitterScript.cs" />
      <Compile Include="Assets\Scripts\LaserScript.cs" />
+     <Compile Include="Assets\Scripts\MechAIHandler.cs" />
      <Compile Include="Assets\Scripts\MechController.cs" />
      <Compile Include="Assets\Scripts\MechInputHandler.cs" />
+     <Compile Include="Assets\Scripts\MechsplosionScript.cs" />
      <Compile Include="Assets\Scripts\ProgressBarScript.cs" />
      <Compile Include="Assets\Scripts\RayBulletScript.cs" />
      <Compile Include="Assets\Scripts\UIEnergyDisplayScript.cs" />
+     <Compile Include="Assets\Scripts\UIHealthbarScript.cs" />
      <Compile Include="Assets\Scripts\UIHeatDisplayScript.cs" />
      <Compile Include="Assets\Scripts\WeaponController.cs" />
      <Compile Include="Assets\Scripts\WeaponDisplayScript.cs" />

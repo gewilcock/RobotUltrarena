@@ -20,19 +20,23 @@ public class WeaponDisplayScript : MonoBehaviour {
 	void Start () {
 
 		wControl=GameObject.Find ("PlayerMech").GetComponentInChildren<WeaponController>().weaponList[weaponIndex];
-		if(wControl==null){Destroy (gameObject);}
-		transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
+		if(wControl==null){
+			Destroy (gameObject);
+		}
+		else{
+			transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
 
-		heatDisplay = transform.FindChild ("UIWHeatBar").GetComponent<ProgressBarScript>();
-		refireDisplay = transform.FindChild ("UIWRefireBar").GetComponent<ProgressBarScript>();
-		backplate = transform.FindChild ("UIWeaponDisplayBack").transform;
+			heatDisplay = transform.FindChild ("UIWHeatBar").GetComponent<ProgressBarScript>();
+			refireDisplay = transform.FindChild ("UIWRefireBar").GetComponent<ProgressBarScript>();
+			backplate = transform.FindChild ("UIWeaponDisplayBack").transform;
 
-		baseColor=backplate.renderer.material.color;
+			baseColor=backplate.renderer.material.color;
 
-		infoText=transform.FindChild ("UIWeaponInfoText").GetComponent<TextMesh>();
-		nameText=transform.FindChild ("UIWeaponNameText").GetComponent<TextMesh>();
+			infoText=transform.FindChild ("UIWeaponInfoText").GetComponent<TextMesh>();
+			nameText=transform.FindChild ("UIWeaponNameText").GetComponent<TextMesh>();
 
-		nameText.text=wControl.weaponName;
+			nameText.text=wControl.weaponName;
+		}
 	}
 	
 	// Update is called once per frame

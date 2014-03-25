@@ -4,7 +4,7 @@ using System.Collections;
 public class MechInputHandler : MonoBehaviour {
 
 	const float MAX_AIM_DISTANCE = 1000f;
-
+	public float throttleAdjustRate=0.2f;
 	public MechController mControl;
 	public WeaponController wControl;
 	public GameObject MechType;
@@ -12,6 +12,9 @@ public class MechInputHandler : MonoBehaviour {
 	Ray aimRay;
 	RaycastHit targetHit;
 	int playerMask;
+
+	HUDTargetBracketScript currentBracket;
+	public GameObject bracketObject;
 
 
 	// Use this for initialization
@@ -50,7 +53,10 @@ public class MechInputHandler : MonoBehaviour {
 
 	void GetSteeringInput(){
 
-		mControl.adjustThrottle (Input.GetAxis("Throttle"));
+		mControl.setThrottle (mControl.throttleLevel + (Input.GetAxis("Throttle")*throttleAdjustRate*Time.deltaTime));
+
+
+
 		mControl.rotateMech (Input.GetAxis ("Steering"));
 		mControl.rotateTorso (Input.GetAxis ("TorsoTwist"));
 
@@ -80,6 +86,34 @@ public class MechInputHandler : MonoBehaviour {
 
 		if(Input.GetButtonUp("ToggleWepGroup1")){
 			wControl.ToggleActiveWeapons(1);
+		}
+
+		if(Input.GetButtonDown ("TargetUnderReticle")){
+
+			bool spawnNew = false;
+			RaycastHit targetingHit;
+			Ray targetingRay=Camera.main.ScreenPointToRay(Input.mousePosition);
+			Physics.Raycast(aimRay, out targetingHit,MAX_AIM_DISTANCE,playerMask);
+
+			Transform test = targetingHit.collider.transform;
+
+			if(test.CompareTag ("DamageObject")){
+			if(currentBracket!=null){
+					Destroy (currentBracket.gameObject);
+					spawnNew=true;
+			}
+			else{
+				spawnNew=true;
+			}
+
+			if(spawnNew){
+				
+				GameObject weh=(GameObject)Instantiate(bracketObject,test.position,Quaternion.identity);
+				currentBracket=weh.GetComponent<HUDTargetBracketScript>();
+				currentBracket.myParent=test;
+				currentBracket.playerMech=mControl.transform;
+			}
+			}
 		}
 	}
 
