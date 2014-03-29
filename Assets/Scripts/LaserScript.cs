@@ -22,7 +22,7 @@ public class LaserScript : MonoBehaviour {
 	// Update is called once per frame
 	void LateUpdate () {
 
-		if(Physics.Raycast (transform.position,transform.rotation*Vector3.forward,out targetHit,maxRange)){
+		if(Physics.Raycast (transform.position,transform.rotation*Vector3.forward,out targetHit,maxRange,~(1<<13))){
 			hitRange=Vector3.Distance (transform.position,targetHit.point);
 			laserTexture.SetPosition (1,new Vector3(0f,0f,hitRange));
 			hitLight.transform.position=targetHit.point;

@@ -6,12 +6,12 @@ public class ProgressBarScript : MonoBehaviour {
 	public Color minColor;
 	public Color maxColor;
 
-	Vector3 basePosition;
+	//Vector3 basePosition;
 	Vector3 baseScale;
 	Vector3 halfBase;
 	// Use this for initialization
 	void Start () {
-		basePosition=transform.localPosition;
+		//basePosition=transform.localPosition;
 		baseScale=transform.localScale;
 		halfBase=transform.localScale/2;
 	}

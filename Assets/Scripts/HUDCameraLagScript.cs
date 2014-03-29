@@ -8,23 +8,26 @@ public class HUDCameraLagScript : MonoBehaviour {
 	float newRotation;
 
 	float prevHeight;
-	float newheight;
+	float currentHeight;
+	public float heightBobLimits=0.2f;
 
 	public float lagMultiplier;
-	public float difference;
+	float difference;
 
 	// Use this for initialization
 	void Start () {
-		mechTransform=GameObject.Find ("PlayerMech").GetComponentInChildren<MechInputHandler>().transform;
-		torsoBone=GameObject.Find ("PlayerMech").transform.GetComponentInChildren<MechController>().torsoBone;
+		mechTransform=MechInputHandler.playerController.mControl.transform;
+		torsoBone=MechInputHandler.playerController.mControl.torsoBone;
 		prevRotation=torsoBone.localRotation.eulerAngles.x-mechTransform.localRotation.eulerAngles.y;
-		prevHeight=mechTransform.position.y;
+		prevHeight=torsoBone.position.y;
+
+		currentHeight=0;
 	}
 	
 	// Update is called once per frame
 	void LateUpdate () {
 
-		newRotation=lagMultiplier*(torsoBone.localRotation.eulerAngles.x-mechTransform.localRotation.eulerAngles.y);
+		newRotation=lagMultiplier*(torsoBone.localRotation.eulerAngles.x-mechTransform.rotation.eulerAngles.y);
 
 		difference = (newRotation-prevRotation);
 
@@ -37,7 +40,23 @@ public class HUDCameraLagScript : MonoBehaviour {
 		prevRotation=newRotation;
 
 
+		if(torsoBone.position.y>prevHeight){
+			currentHeight=Mathf.Lerp (currentHeight,-heightBobLimits,0.01f);
 
+		}
+		else if(torsoBone.position.y<prevHeight){
+			currentHeight=Mathf.Lerp (currentHeight,heightBobLimits,Time.deltaTime*3f);
+		}
+		else{
+			currentHeight=Mathf.Lerp (currentHeight,0,Time.deltaTime*3f);
+		}
+
+
+
+		prevHeight=torsoBone.position.y;
+
+		transform.localPosition=new Vector3(0,currentHeight,0);
 
 	}
+
 }

@@ -19,12 +19,13 @@ public class WeaponDisplayScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		wControl=GameObject.Find ("PlayerMech").GetComponentInChildren<WeaponController>().weaponList[weaponIndex];
+		wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList[weaponIndex];
 		if(wControl==null){
 			Destroy (gameObject);
 		}
 		else{
 			transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
+			transform.localEulerAngles=new Vector3(transform.localEulerAngles.x,transform.localEulerAngles.y,0);
 
 			heatDisplay = transform.FindChild ("UIWHeatBar").GetComponent<ProgressBarScript>();
 			refireDisplay = transform.FindChild ("UIWRefireBar").GetComponent<ProgressBarScript>();

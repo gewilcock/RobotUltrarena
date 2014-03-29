@@ -81,9 +81,9 @@ public class HUDTargetBracketScript : MonoBehaviour {
 
 	}
 
-	void OnGUI(){
+	/*void OnGUI(){
 		if(myParent!=null){
 			GUI.Label (new Rect(0,0,64,64),screenPoint.ToString());
 		}
-	}
+	}*/
 }

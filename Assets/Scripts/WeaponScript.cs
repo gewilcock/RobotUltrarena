@@ -4,6 +4,8 @@ using System.Collections;
 public class WeaponScript : MonoBehaviour {
 
 	//References
+	public bool isDiscreteProjectile;
+
 	public WeaponController myController;
 	public Transform muzzlePoint;
 	public GameObject myProjectile;
@@ -79,7 +81,9 @@ public class WeaponScript : MonoBehaviour {
 				}
 					
 				GameObject pew = (GameObject)Instantiate (myProjectile,muzzlePoint.position,fireDirection);
+			if(!isDiscreteProjectile){
 				pew.transform.parent=muzzlePoint;
+			}
 				
 				
 			}

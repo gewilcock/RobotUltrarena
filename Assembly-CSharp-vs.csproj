@@ -46,6 +46,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\DeathCameraScript.cs" />
+     <Compile Include="Assets\DiscreteProjectileScript.cs" />
+     <Compile Include="Assets\ExplosionScript.cs" />
+     <Compile Include="Assets\GameDataManagerScript.cs" />
+     <Compile Include="Assets\HUDFPS.cs" />
+     <Compile Include="Assets\MechSpawnerScript.cs" />
+     <Compile Include="Assets\PrefabLibraryScript.cs" />
      <Compile Include="Assets\Scripts\AimReticleScript.cs" />
      <Compile Include="Assets\Scripts\GlobalTargetList.cs" />
      <Compile Include="Assets\Scripts\HUDCameraLagScript.cs" />

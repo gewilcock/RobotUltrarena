@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MechInputHandler : MonoBehaviour {
 
+	public static MechInputHandler playerController{get;private set;}
+
 	const float MAX_AIM_DISTANCE = 1000f;
 	public float throttleAdjustRate=0.2f;
 	public MechController mControl;
@@ -12,55 +14,84 @@ public class MechInputHandler : MonoBehaviour {
 	Ray aimRay;
 	RaycastHit targetHit;
 	int playerMask;
+	int weaponPermeableMask;
 
 	HUDTargetBracketScript currentBracket;
 	public GameObject bracketObject;
-
+	public GameObject HUDObject;
 	GameObject deathCam;
+
+	public bool isShootyTarget;
+
+	bool deathRoutineDone=false;
 
 	// Use this for initialization
 	void Awake(){
-		GameObject newMech=(GameObject)Instantiate (MechType,transform.position,transform.rotation);
-		newMech.transform.parent=this.transform;
-		newMech.layer=8;
 
-		Camera.main.transform.parent=newMech.transform.GetComponentInChildren<MechController>().torsoBone;
-
-		GameObject.Find ("RadarCamera").transform.parent=newMech.transform;
-
+		playerController=this;
 		deathCam = GameObject.Find ("DeathCamera");
-		deathCam.SetActive(false);
+		Screen.showCursor=false;
 
-		playerMask = 1<<8;
-		playerMask =~playerMask;
+
 	}
 
 
 	void Start () {
 
-		mControl=GetComponentInChildren<MechController>();
-		wControl=GetComponentInChildren<WeaponController>();
-		GameObject.Find ("HUD").transform.BroadcastMessage ("Start");
+//		GameObject newMech=(GameObject)Instantiate (MechType,transform.position,transform.rotation);
+//		newMech.transform.parent=this.transform;
+		gameObject.layer=8;
+		
+		mControl=GetComponent<MechController>();
+		wControl=GetComponent<WeaponController>();
+
+		Camera.main.transform.parent=mControl.torsoBone;
+		Camera.main.transform.localPosition=new Vector3(-8f,0,-20);
+		Camera.main.transform.localEulerAngles=new Vector3(0f,0f,90f);
+
+		GameObject.Find ("RadarCamera").transform.parent=mControl.transform;
+
+		bracketObject=(GameObject)Resources.Load ("UITargetingBracket");
+
+		deathCam.GetComponent<DeathCameraScript>().playerMech=mControl.CockpitPosition;
+		deathCam.SetActive(false);
+
+
+		playerMask = 1<<8;
+		weaponPermeableMask = 1<<13;
+		playerMask = playerMask | weaponPermeableMask;
+		playerMask =~playerMask;
+
+		GlobalTargetList.targetList.AddMech (mControl);
 
 		currentBracket=null;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if(mControl!=null){
 		if(!mControl.isDead){
 			GetSteeringInput();
 			MouseAim();
 			GetWeaponInput();
 		}
 		else{
-
-			Destroy (currentBracket.gameObject);
-			currentBracket=null;
-
+			if(!deathRoutineDone){
+			if(currentBracket!=null){
+				Destroy (currentBracket.gameObject);
+				currentBracket=null;
+			}
+			
+			
 			deathCam.transform.position=Camera.main.transform.position;
-			deathCam.transform.LookAt(mControl.transform.position);
-			Camera.main.gameObject.SetActive (false);
+			
+			foreach(Camera c in Camera.allCameras){c.gameObject.SetActive (false);}
+			
 			deathCam.SetActive(true);
+			deathCam.transform.LookAt(mControl.transform.position);
+			deathRoutineDone=true;
+			}
+		}
 		}
 
 	}
@@ -106,10 +137,9 @@ public class MechInputHandler : MonoBehaviour {
 
 			bool spawnNew = false;
 			RaycastHit targetingHit;
-			Ray targetingRay=Camera.main.ScreenPointToRay(Input.mousePosition);
-			bool hit=Physics.Raycast(aimRay, out targetingHit,MAX_AIM_DISTANCE,playerMask);
+			bool hittarget=Physics.Raycast(aimRay, out targetingHit,MAX_AIM_DISTANCE,(playerMask));
 
-			if(hit){
+			if(hittarget){
 			Transform test = targetingHit.collider.transform;
 
 			if(test.CompareTag ("DamageObject")){
@@ -136,13 +166,13 @@ public class MechInputHandler : MonoBehaviour {
 
 	void MouseAim(){
 
-		bool hit;
-
 		aimRay=Camera.main.ScreenPointToRay(Input.mousePosition);
-		hit=Physics.Raycast(aimRay, out targetHit,MAX_AIM_DISTANCE,playerMask);
+		bool hit=Physics.Raycast(aimRay, out targetHit,MAX_AIM_DISTANCE,(playerMask));
+		isShootyTarget=false;
 
 		if(hit){
 			wControl.aimPoint=targetHit.point;
+			if(targetHit.transform.CompareTag ("DamageObject")){isShootyTarget=true;}
 		}
 		else{
 			wControl.aimPoint=aimRay.GetPoint (MAX_AIM_DISTANCE);

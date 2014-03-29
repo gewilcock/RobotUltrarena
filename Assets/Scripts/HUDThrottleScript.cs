@@ -11,14 +11,17 @@ public class HUDThrottleScript : MonoBehaviour {
 	Color baseColour;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
+		MechInputHandler myHandler=MechInputHandler.playerController;
+		
 		transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
-		transform.Rotate (0,0,90f);
-		MechInputHandler yay = GameObject.Find ("PlayerMech").GetComponent<MechInputHandler>();
-		mController=yay.mControl;
-		wController=yay.wControl;
-		throttleBar=transform.GetComponentInChildren <ProgressBarScript>();
+		transform.Rotate (transform.localEulerAngles.x,0,90f);
+		
+		mController=myHandler.mControl;
+		wController=myHandler.wControl;
+		throttleBar=GetComponentInChildren <ProgressBarScript>();
 		baseColour=throttleBase.renderer.material.color;
+
 	}
 	
 	// Update is called once per frame

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class WeaponController : MonoBehaviour {
 
+
+
 	//heat variables
 	public MechController myController;
 	public float heatLevelMax = 100f;
@@ -28,7 +30,10 @@ public class WeaponController : MonoBehaviour {
 	//Variables for aim calculation
 	public Vector3 aimPoint;
 	public Transform[] aimPivots = new Transform[2];
+	public float yawLimit=45f;
+	public float pitchLimit=30f;
 
+	public bool inFireCone;
 
 	// Use this for initialization
 	void Start () {
@@ -59,7 +64,10 @@ public class WeaponController : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
+
 		if(!isDead){
+			inFireCone=true;
+
 			for(int i=0; i<aimPivots.Length; i++){
 
 				Vector3 targetDir = aimPoint - aimPivots[i].position;										 
@@ -71,19 +79,27 @@ public class WeaponController : MonoBehaviour {
 
 				Quaternion relativeRot = testRotation *Quaternion.Inverse (baseRotation);
 
-				float dx = relativeRot.eulerAngles.x;
+				float dx;
 				float dy;
 
 				if(relativeRot.eulerAngles.y<180f){
-					dy = Mathf.Clamp (relativeRot.eulerAngles.y,0,45f);
+					dy = Mathf.Clamp (relativeRot.eulerAngles.y,0,yawLimit);
 				}
-				else{
-					dy = Mathf.Clamp (relativeRot.eulerAngles.y,315,360f);
+				else {
+					dy = Mathf.Clamp (relativeRot.eulerAngles.y,360-yawLimit,360f);
 				}
 
-				//relativeRot.eulerAngles=new Vector3(dx,dy,0);
+				if(relativeRot.eulerAngles.x<180f){
+					dx = Mathf.Clamp (relativeRot.eulerAngles.x,0,pitchLimit);
+				}
+				else {
+					dx = Mathf.Clamp (relativeRot.eulerAngles.x,360-pitchLimit,360f);
+				}
 
-				aimPivots[i].rotation = Quaternion.Euler (new Vector3(dx,dy,relativeRot.eulerAngles.z))*baseRotation;
+
+				if((dy != relativeRot.eulerAngles.y)||(dx != relativeRot.eulerAngles.x)){inFireCone=false;}
+
+				aimPivots[i].rotation = Quaternion.Euler (new Vector3(dx,dy,0))*baseRotation;
 
 
 			}

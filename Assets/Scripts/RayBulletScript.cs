@@ -21,10 +21,10 @@ public class RayBulletScript : MonoBehaviour {
 				fired=true;
 			}
 			else{
-				hit=Physics.Raycast (transform.position,transform.rotation*Vector3.forward,out targetHit,maxRange);
+			hit=Physics.Raycast (transform.position,transform.rotation*Vector3.forward,out targetHit,maxRange,~(1<<13));
 				if(hit){
 				
-					Instantiate(hitEffect,targetHit.point,Quaternion.LookRotation (targetHit.normal));
+					Instantiate(hitEffect,targetHit.point+targetHit.normal,Quaternion.LookRotation (targetHit.normal));
 					
 				if(targetHit.collider.transform.CompareTag("DamageObject")){
 					targetHit.collider.transform.BroadcastMessage("TakeDamage",myDamage);

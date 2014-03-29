@@ -5,11 +5,14 @@ public class MechController : MonoBehaviour {
 
 	//Script controls all major variables and mech systems
 
+	public GameObject reactorBreachEffect;
 	public GameObject deathExplosion;
 	//Reference scripts
 	private CharacterMotor mechMotor;
+	private CharacterController cController;
 	private WeaponController mechWeapons;
 	private Animation animations;
+	public Transform CockpitPosition;
 
 	//armour and armagel variables
 
@@ -18,6 +21,8 @@ public class MechController : MonoBehaviour {
 	public float armourLevel = 100f;
 	public float maxArmour = 100f;
 	public float armourRatio{get; protected set;}
+
+	public bool hasTakenDamage=false;
 
 	float armagelLevel;
 	public float maxArmagelLevel = 50f;
@@ -36,8 +41,11 @@ public class MechController : MonoBehaviour {
 	float minThrottle=-0.25f;
 
 
+
+
 	// Use this for initialization
 	void Start () {
+
 	mechMotor = GetComponent <CharacterMotor>();
 	animations = GetComponentInChildren<Animation>();
 	mechWeapons=GetComponentInChildren<WeaponController>();
@@ -53,6 +61,7 @@ public class MechController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		hasTakenDamage=false;
 
 		mechMotor.inputMoveDirection = transform.rotation*Vector3.forward*throttleLevel;
 		AssessDamage();
@@ -90,12 +99,13 @@ public class MechController : MonoBehaviour {
 	
 		if(!isDead){
 
-			if((throttleLevel/maxThrottle)==0f){
-			animations.CrossFade ("Stationary",0.5f);
+
+			if(mechMotor.movement.velocity.sqrMagnitude==0f){
+				animations.CrossFade ("Stationary",0.5f);
 			}
 			else{
 			if(!animations.IsPlaying("Walk")){animations.CrossFade ("Walk",2f);}
-			animations["Walk"].speed = (throttleLevel/maxThrottle);
+				animations["Walk"].speed = mechMotor.movement.velocity.sqrMagnitude/Mathf.Pow (mechMotor.movement.maxForwardSpeed,2);
 			}
 		}
 		else{
@@ -113,23 +123,29 @@ public class MechController : MonoBehaviour {
 	public void TakeDamage(float damage){
 		armourLevel-=damage;
 		armourRatio=armourLevel/maxArmour;
+		hasTakenDamage=true;
 	}
 
 	void AssessDamage(){
 		if(!isDead){
+
 			if(armourLevel<=0f){
 				isDead=true;
 				mechWeapons.isDead=true;
 				mechWeapons.StopAllWeapons ();
 				allStop ();
-				GameObject weh=(GameObject)Instantiate (deathExplosion,torsoBone.position,Quaternion.identity);
+				GameObject weh=(GameObject)Instantiate (reactorBreachEffect,torsoBone.position,Quaternion.identity);
 				weh.GetComponent<MechsplosionScript>().myParent=torsoBone;
 			}
 		}
 		else{
 			if(!animations.isPlaying){
+
+				Instantiate (deathExplosion,torsoBone.position,Quaternion.identity);
+
 				Destroy (gameObject);
 			}
 		}
 	}
+	
 }
