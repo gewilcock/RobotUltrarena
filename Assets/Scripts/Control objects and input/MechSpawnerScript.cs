@@ -6,13 +6,14 @@ public class MechSpawnerScript : MonoBehaviour {
 	public GameObject PlayerCameraPrefab;
 	public GameObject HUDObject;
 
+
 	// Use this for initialization
 	void Awake () {
 
 	}
 
 	void Start(){
-	
+		
 		SpawnPlayers ();
 
 	}
@@ -22,7 +23,7 @@ public class MechSpawnerScript : MonoBehaviour {
 	
 	}
 
-	void SpawnPlayers(){
+	public void SpawnPlayers(){
 
 		MechData[] players = GameDataManagerScript.GameDataManager.players;
 

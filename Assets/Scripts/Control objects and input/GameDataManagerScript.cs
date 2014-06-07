@@ -15,7 +15,7 @@ public class GameDataManagerScript : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		if(GameDataManager==null){
 			DontDestroyOnLoad (gameObject);
 			GameDataManager=this;

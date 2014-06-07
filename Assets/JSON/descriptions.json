@@ -1,0 +1,11 @@
+{
+"Dervish":"Small, fast machine that sacrifices armour and\nheavy weapons for a high maximum speed and\nimproved manoeuvring.",
+"Deathbringer":"A titan. Heavily armoured with dual heavy\nweapon slots, but slow and unable to equip \nmore than a single equipment module.",
+"Autogun":"Rapid-fire automatic ballistic weapon that\nchips away gradually at enemy armour.",
+"Coilgun":"Electromagnetically-propelled high-explosive\nshell launcher. Slow-firing but effective.",
+"Light Laser":"Medium-range, high-accuracy beam weapon.\nDeals moderate damage over time.",
+"Heavy Laser":"Medium-range, high-accuracy beam weapon.\nDeals heavy damage over time.",
+"Shotgun":"High-spread, slow-firing ballistic weapon.\nLethal at close range.",
+"Dumb Missile":"Missile swarm with rudimentary guidance\nsteers to where it is aimed on launch.",
+"Homing Missile":"Missile swarm with smarter guidance steers\nto a target locked by the pilot before launch."
+}

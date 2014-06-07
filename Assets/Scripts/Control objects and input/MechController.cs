@@ -13,7 +13,7 @@ public class MechController : MonoBehaviour {
 	private CharacterController cControl;
 
 	private WeaponController wControl;
-	private Animation animations;
+	public Animation animations;
 	public Transform CockpitPosition;
 
 	//armour and damage processing variables
@@ -68,6 +68,8 @@ public class MechController : MonoBehaviour {
 	speedModifier = 0;
 	turnModifier = 0;
 	damageVector = Vector3.zero;
+			
+	animations.Play ("Stationary");
 
 	}
 	
