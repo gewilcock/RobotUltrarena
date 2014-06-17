@@ -13,6 +13,8 @@ public class HUDThrottleScript : MonoBehaviour {
 
 	float speedTick;
 
+	float lastSpeed;
+
 	Color baseColour;
 
 	// Use this for initialization
@@ -31,7 +33,7 @@ public class HUDThrottleScript : MonoBehaviour {
 
 		speedText=GetComponentInChildren<TextMesh>();
 
-
+		lastSpeed = cController.velocity.magnitude;
 	}
 	
 	// Update is called once per frame
@@ -48,8 +50,12 @@ public class HUDThrottleScript : MonoBehaviour {
 
 		if(speedTick<Time.time){
 
-			float speed = Mathf.Round (cController.velocity.magnitude)*3.6f;
+			float deltaV = cController.velocity.magnitude - lastSpeed;
+			lastSpeed = cController.velocity.magnitude;
+
+			float speed = Mathf.Round (cController.velocity.magnitude*3.6f);
 			speedText.text=speed.ToString ()+" km/h";
+			/*speedText.text+=" - dV: "+deltaV.ToString();*/
 			speedTick=Time.time+0.5f;
 
 

@@ -16,8 +16,8 @@ public class MechAIHandler : MonoBehaviour {
 
 	//AI control
 	bool hasMoveAITicked;
-	public float minMoveTickTime=2f;
-	public float maxMoveTickTime=5f;
+	public float minMoveTickTime=1f;
+	public float maxMoveTickTime=3f;
 	float nextMoveTick;
 
 	bool hasCombatAITicked;
@@ -43,13 +43,14 @@ public class MechAIHandler : MonoBehaviour {
 
 
 
-	//Weapons Targeting an combat
-	public float minTargetAttackRadius=25;
-	public float maxTargetAttackRadius=50;
+	//Weapons Targeting and combat
+	public float minTargetAttackRadius=10f;
+	public float maxTargetAttackRadius=500f;
 	MechController myTarget;
 	Ray aimRay;
 	RaycastHit targetHit;
-	public float walkAggression=50f;
+	public float defaultAggression = 0.8f;
+	public float aggression=0.8f;
 	GlobalTargetList targetList;
 
 	Vector3 aimDriftTarget;
@@ -59,14 +60,6 @@ public class MechAIHandler : MonoBehaviour {
 
 	bool hit;
 
-	// Use this for initialization
-
-
-	void Awake(){
-
-	}
-	
-	
 	void Start () {
 				
 //		GameObject newMech=(GameObject)Instantiate (MechType,transform.position,transform.rotation);
@@ -82,8 +75,11 @@ public class MechAIHandler : MonoBehaviour {
 		targetLocation = transform.position;
 		levelTerrain= GameObject.Find ("Terrain").GetComponent<Terrain>().terrainData;
 
+		mControl.cockpit.gameObject.SetActive (false);
+
 		GlobalTargetList.targetList.AddMech(mControl);
 
+		populateMinMaxRanges();
 		AITick ();
 	}
 	
@@ -93,17 +89,33 @@ public class MechAIHandler : MonoBehaviour {
 		if(mControl!=null){
 			if(!mControl.isDead){		
 
-			AITick ();
+				AITick ();
+				ScanForTargets();
+				CalculateAim();
+				CalculateShootyBang();
+				DetermineWalkTarget();
+				AvoidObstacles();
+				CalculateSteering();
 
-			DetermineWalkTarget();
-			AvoidObstacles();
-			CalculateSteering();
-			ScanForTargets();
-			CalculateAim();
-			CalculateShootyBang();
 			}
 		}
 		
+	}
+
+	void populateMinMaxRanges()
+	{
+		for(int i=0; i<wControl.weaponList.Length; i++)
+		{
+			if(minTargetAttackRadius>wControl.weaponList[i].weaponSafetyRange)
+			{
+				minTargetAttackRadius = wControl.weaponList[i].weaponSafetyRange;
+			}
+
+			if(maxTargetAttackRadius>wControl.weaponList[i].weaponRange)
+			{
+				minTargetAttackRadius = wControl.weaponList[i].weaponRange;
+			}
+		}
 	}
 
 	void DetermineWalkTarget(){
@@ -128,11 +140,10 @@ public class MechAIHandler : MonoBehaviour {
 				}
 					
 			}
-			else{
-				if((Random.Range (0,100)<=walkAggression)||(recalc)){
-					//Debug.Log ("Recalculating position relative to attack target");
-					targetLocation= myTarget.transform.position+ (Quaternion.AngleAxis(Random.Range(-135,135),Vector3.up)*new Vector3(0,0,Random.Range (minTargetAttackRadius,maxTargetAttackRadius)));
-				}
+			else{ //in combat
+
+				//Debug.Log ("Recalculating position relative to attack target");
+				targetLocation= myTarget.transform.position + (myTarget.transform.rotation*Quaternion.AngleAxis(Random.Range(-90,90),Vector3.up)*new Vector3(0,0,minTargetAttackRadius+(maxTargetAttackRadius-minTargetAttackRadius)*0.5f*(1-aggression)));
 					
 			}
 			
@@ -151,7 +162,7 @@ public class MechAIHandler : MonoBehaviour {
 			bool isBlocked=false;
 
 			RaycastHit obstacle;
-			isBlocked = Physics.Raycast (mControl.CockpitPosition.position,mControl.CockpitPosition.forward,out obstacle,100f,collMask);
+			isBlocked = Physics.Raycast (mControl.AIAimPoint.position,mControl.AIAimPoint.forward,out obstacle,100f,collMask);
 
 			if(isBlocked){
 				//Debug.Log ("There's a thing in my way");
@@ -159,7 +170,7 @@ public class MechAIHandler : MonoBehaviour {
 
 				if(!obstacle.transform.CompareTag("Terrain")){
 					//Debug.Log ("Bouncing.");
-					Vector3 bouncevector=(obstacle.point-mControl.CockpitPosition.position);
+					Vector3 bouncevector=(obstacle.point-mControl.AIAimPoint.position);
 					float bouncedistance=bouncevector.magnitude;
 					bouncevector.Normalize();
 					bouncedistance=Mathf.Clamp (bouncedistance,8f,50f);
@@ -187,13 +198,15 @@ public class MechAIHandler : MonoBehaviour {
 
 					absoluteAngle=Quaternion.Angle(mControl.transform.rotation,mControl.transform.rotation*relativeRot);
 					
-					if(myTarget==null){
-					if((absoluteAngle>5f)&&(distanceToTarget<10f)){
-						
-							mControl.setThrottle (0.1f);
-						
-					}
-					else{mControl.setThrottle (0.8f);}
+					if(myTarget==null)
+					{
+						if((absoluteAngle>5f)&&(distanceToTarget<10f))
+						{
+							
+								mControl.setThrottle (0.1f);
+							
+						}
+						else{mControl.setThrottle (0.8f);}
 					}
 					else{
 						mControl.setThrottle(0.5f);
@@ -219,7 +232,10 @@ public class MechAIHandler : MonoBehaviour {
 			if(myTarget!=null){
 				//Debug.Log ("I already have a target");
 
-				if(Physics.Raycast (mControl.CockpitPosition.position,targetVector,targetVector.magnitude,terrainMask)){
+				if(myTarget.isDead)
+					findtarget = true;
+
+				if(Physics.Raycast (mControl.AIAimPoint.position,targetVector,targetVector.magnitude,terrainMask)){
 					//Debug.Log ("My view of it is blocked");
 
 					if(targetingTimeout==0){
@@ -248,7 +264,7 @@ public class MechAIHandler : MonoBehaviour {
 			if(findtarget){
 				myTarget=null;
 				//Debug.Log ("Scanning for target.");
-				myTarget=GlobalTargetList.targetList.GetClosestTarget (mControl.CockpitPosition); 
+				myTarget=GlobalTargetList.targetList.GetClosestTarget (mControl.AIAimPoint); 
 
 				//if(myTarget!=null){Debug.Log ("Got a target!");}
 
@@ -271,7 +287,7 @@ public class MechAIHandler : MonoBehaviour {
 		float relativeTargetAngle;
 
 		if(myTarget!=null){
-			targetVector = myTarget.CockpitPosition.position-mControl.CockpitPosition.position;
+			targetVector = myTarget.AIAimPoint.position-mControl.AIAimPoint.position;
 			Quaternion relativeTarget = Quaternion.FromToRotation (mControl.transform.rotation*Vector3.forward,targetVector);
 			relativeTargetAngle=relativeTarget.eulerAngles.y;
 		}
@@ -301,7 +317,7 @@ public class MechAIHandler : MonoBehaviour {
 
 		RaycastHit targetHit;
 
-		hit=Physics.Raycast(mControl.CockpitPosition.position,targetVector,out targetHit,MAX_AIM_DISTANCE,collMask);
+		hit=Physics.Raycast(mControl.AIAimPoint.position,targetVector,out targetHit,MAX_AIM_DISTANCE,collMask);
 		
 		if(hit){
 			wControl.aimPoint=targetHit.point+aimDrift;
@@ -323,7 +339,17 @@ public class MechAIHandler : MonoBehaviour {
 					if((wControl.inFireCone)&&(hit)){
 						float targetdistance = targetVector.magnitude;
 						if(targetdistance<=400f){
-							if(!Physics.Raycast (mControl.CockpitPosition.position,targetVector,targetdistance,terrainMask)){
+							if(!Physics.Raycast (mControl.AIAimPoint.position,targetVector,targetdistance,terrainMask)){
+								for(int i =0; i<wControl.weaponList.Length;i++)
+								{
+									if(wControl.weaponList[i]!=null){
+										if((targetdistance<wControl.weaponList[i].weaponRange) && (targetdistance>wControl.weaponList[i].weaponSafetyRange))
+											wControl.weaponList[i].isActive = true;
+										else
+											wControl.weaponList[i].isActive = false;
+									}
+								}
+
 								wControl.SetWeaponTriggers (true,0);
 								wControl.SetWeaponTriggers (true,1);
 							}
@@ -366,13 +392,19 @@ public class MechAIHandler : MonoBehaviour {
 		Gizmos.color=Color.green;
 		Gizmos.DrawLine (mControl.transform.position,steerLocation);
 		Gizmos.DrawRay (mControl.transform.position,mControl.transform.forward);
-		Gizmos.color=Color.yellow;
-		Gizmos.DrawRay(mControl.torsoBone.position,mControl.torsoBone.forward);
+		
+		if(wControl.inFireCone)
+			Gizmos.color=Color.cyan;
+		else
+			Gizmos.color=Color.blue;
+		Gizmos.DrawLine (mControl.AIAimPoint.position,wControl.aimPoint);
+		
+		
 		if(myTarget!=null){
 		Gizmos.color=Color.red;
 		Gizmos.DrawLine (mControl.transform.position,myTarget.transform.position);
 		Gizmos.color=Color.yellow;
-		Gizmos.DrawRay (mControl.CockpitPosition.position,targetVector);
+		Gizmos.DrawRay (mControl.AIAimPoint.position,targetVector);
 
 		}
 		Gizmos.color=Color.white;

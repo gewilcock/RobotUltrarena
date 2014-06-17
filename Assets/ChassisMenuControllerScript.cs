@@ -5,10 +5,35 @@ public class ChassisMenuControllerScript : MonoBehaviour {
 	public TextMesh Mechname;
 	public TextMesh Mechstats;
 	// Use this for initialization
+	int mechIndex;
+
 	void Start () {
-	
+
+			for (int l=0; l<PrefabLibraryScript.library.mechChassis.Length; l++)
+			{
+				
+				if(GarageSpawnerScript.Spawner.wControl.gameObject.name.IndexOf(PrefabLibraryScript.library.mechChassis[l].name)>-1)
+				{
+					mechIndex = l;
+				}
+				
+				
+			}
+		
 	}
-	
+
+	void cycleChassis(int shiftdirection)
+	{
+		mechIndex += shiftdirection;
+		
+		if(mechIndex<0)
+			mechIndex = PrefabLibraryScript.library.mechChassis.Length-1;
+		else if(mechIndex==PrefabLibraryScript.library.mechChassis.Length)
+			mechIndex = 0;
+
+		GameDataManagerScript.GameDataManager.players[0].myMech = PrefabLibraryScript.library.mechChassis[mechIndex];
+
+	}
 
 	void updateText () {
 		string namestring = GarageSpawnerScript.Spawner.mControl.gameObject.name;

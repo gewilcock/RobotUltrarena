@@ -77,6 +77,7 @@ public class AimReticleScript : MonoBehaviour {
 					currentBracket=weh.GetComponent<HUDTargetBracketScript>();
 					currentBracket.myParent=test;
 					currentBracket.playerMech=pInput.mControl.transform;
+					pInput.wControl.lockedTarget = test;
 				}
 			}
 		}

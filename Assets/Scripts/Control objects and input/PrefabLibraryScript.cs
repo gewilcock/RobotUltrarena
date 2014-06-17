@@ -16,9 +16,9 @@ public class PrefabLibraryScript : MonoBehaviour {
 
 	void Awake(){
 		library=this;
-		StreamReader descriptionFile = File.OpenText (Application.dataPath+"/JSON/descriptions.json");
-		descriptionJSON = JSON.Parse (descriptionFile.ReadToEnd());
-		descriptionFile.Close ();
+		TextAsset descriptionFile = Resources.Load<TextAsset>("descriptions");
+		descriptionJSON = JSON.Parse (descriptionFile.text);
+
 	}
 
 	public GameObject getMechChassis(int index){

@@ -13,6 +13,10 @@ public class WeaponScript : MonoBehaviour {
 	Transform muzzlePoint;
 	public GameObject myProjectile;
 
+	//Audio stuff
+	AudioSource fireSound;
+	public float fireSoundPitchVariance = 0.05f;
+
 	//4-character name for display
 	public string weaponName;
 
@@ -20,7 +24,8 @@ public class WeaponScript : MonoBehaviour {
 	public bool isActive{get;set;}
 	public bool triggered{get;set;}
 	public bool isOverheating{get;protected set;}
-	public float weaponRange;
+	public float weaponRange;		//maximum range at which the weapon can be fired
+	public float weaponSafetyRange; //Minimum range at which the weapon would be safely fired, so that AI doesn't blow itself up.
 	public bool canFire{get; protected set;}
 
 
@@ -55,8 +60,6 @@ public class WeaponScript : MonoBehaviour {
 	public float lockOnDuration;
 	float lockOnTime;
 	public float lockOnRatio{get;protected set;}
-	public Transform lockTransform{get; protected set;}
-	Transform lastLockTransform;
 
 	Ray lockRay;
 	int lockMask = ~((1<<9)|(1<<13)); //set up locking coll mask to ignore weapon-permeable and HUD meshes.
@@ -64,6 +67,7 @@ public class WeaponScript : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		muzzlePoint=transform.FindChild ("muzzlePoint");
+		fireSound = transform.GetComponent<AudioSource>();
 		nextFireTime = Time.time;
 		isActive=true;
 	}
@@ -75,7 +79,7 @@ public class WeaponScript : MonoBehaviour {
 		if(isActive){
 			if(triggered && canFire){
 				if(requiresLock){
-					if(lockTransform==null){
+					if((myController.lockedTarget != null) && (lockOnTime == 0)){
 						lockOnTime = Time.time + lockOnDuration;
 					}
 					LockOnTargetAndFire();
@@ -84,9 +88,13 @@ public class WeaponScript : MonoBehaviour {
 					FireWeapon();
 				}
 			}
+			else
+				lockOnTime =0;
 		}
 
 		ApplyHeat();
+
+		ApplySound();
 
 		refireRatio=(nextFireTime-Time.time)/refireTime;
 		refireRatio=Mathf.Clamp (refireRatio,0,1);
@@ -113,7 +121,7 @@ public class WeaponScript : MonoBehaviour {
 			}
 
 			if(requiresLock){
-				pew.GetComponent<MissileSpawnerScript>().lockedTarget = lockTransform;
+				pew.GetComponent<MissileSpawnerScript>().lockedTarget = myController.lockedTarget;
 			}
 				
 			}
@@ -167,46 +175,41 @@ public class WeaponScript : MonoBehaviour {
 
 	void LockOnTargetAndFire(){
 
-		lockRay = new Ray(muzzlePoint.position,myController.aimPoint-muzzlePoint.position);
-		RaycastHit lockTarget;
-		bool hit = Physics.Raycast(lockRay,out lockTarget,5000f,lockMask);
-		
-		if(hit){
-			if(lockTarget.transform.CompareTag("DamageObject")){
-				lockTransform = lockTarget.transform;
-			}
-			else{
-				lockTransform = null;
-			}
-		}
-		else{
-			lockTransform = null;
-
-		}
-
-		if((lastLockTransform != null) && (lockTransform == lastLockTransform)){
-			if(lockOnTime <= Time.time){
+		if(myController.lockedTarget != null)
+		{
+			if(lockOnTime <= Time.time)
+			{
 				Debug.Log ("FIRE MISSILES!");
 				FireWeapon ();
-				lockTransform=null;
+				lockOnTime = 0;
 			}
 		}
-		else{
-			lockOnTime=Time.time+lockOnDuration;
 
-		}
-
-		lastLockTransform = lockTransform;
 		lockOnRatio = ((lockOnTime-Time.time)/lockOnDuration);
+	}
+
+	void ApplySound()
+	{
+		if(fireSound)
+		{
+			if(isActive && triggered && canFire && !fireSound.isPlaying)
+			{
+				if(fireSoundPitchVariance>0)
+					fireSound.pitch = Random.Range (1-fireSoundPitchVariance,1+fireSoundPitchVariance);
+
+				fireSound.Play();
+
+			}
+			if((!triggered || isOverheating) && (fireSound.loop))
+				fireSound.Stop ();
+		}
 	}
 
 	void OnDrawGizmos(){
 		Gizmos.color = Color.green;
 		Gizmos.DrawRay (lockRay);
-		if(lockTransform!=null){
-		Gizmos.color = Color.red;
-			Gizmos.DrawWireSphere(lockTransform.position,10f);
-		}
 
 	}
+
+
 }

@@ -39,6 +39,8 @@ public class WeaponController : MonoBehaviour {
 
 	public bool inFireCone;
 
+	public Transform lockedTarget;
+
 	// Use this for initialization
 	void Start () {
 		isDead=false;

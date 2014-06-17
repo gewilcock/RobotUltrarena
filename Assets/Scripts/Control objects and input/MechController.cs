@@ -14,7 +14,8 @@ public class MechController : MonoBehaviour {
 
 	private WeaponController wControl;
 	public Animation animations;
-	public Transform CockpitPosition;
+	public Transform AIAimPoint;
+	public Transform cockpit;
 
 	//armour and damage processing variables
 
@@ -145,6 +146,8 @@ public class MechController : MonoBehaviour {
 
 		if(isShielded){
 			GameObject weh = (GameObject)Instantiate (Resources.Load ("ShieldImpactEffect"),cd.hitPoint,Quaternion.LookRotation (cd.hitNormal));
+			float damageSize = Mathf.Clamp (cd.damageValue,1f,10f);
+			weh.transform.localScale = new Vector3(damageSize,damageSize,1);
 			weh.transform.parent=this.transform;
 			wControl.energyLevel -= cd.damageValue * damageDampening;
 		}
@@ -191,12 +194,13 @@ public class MechController : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	public void JumpMech(float thrust){
-		if(thrust >0)
+		if(thrust > 0)
 			mechMotor.inputJump = true;
 		else
 			mechMotor.inputJump = false;
+
 		transform.position += Vector3.up*thrust*Time.deltaTime;
 	}
 }

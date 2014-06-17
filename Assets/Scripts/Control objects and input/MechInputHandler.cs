@@ -6,6 +6,9 @@ public class MechInputHandler : MonoBehaviour {
 	public float deadZoneRange=0.15f;
 	public float mouseStrength;
 
+	public float cameraPitchMax = 15f;
+	public float cameraPitch = 0;
+
 	public bool absThrottle=false;
 
 	public static MechInputHandler playerController{get;private set;}
@@ -31,6 +34,8 @@ public class MechInputHandler : MonoBehaviour {
 	public bool isTargeting{get;protected set;}
 
 	bool deathRoutineDone=false;
+
+	bool isCockpitView = false;
 
 	// Use this for initialization
 	void Awake(){
@@ -59,8 +64,10 @@ public class MechInputHandler : MonoBehaviour {
 
 		GameObject.Find ("RadarCamera").transform.parent=mControl.transform;
 
-		deathCam.GetComponent<DeathCameraScript>().playerMech=mControl.CockpitPosition;
+		deathCam.GetComponent<DeathCameraScript>().playerMech=mControl.AIAimPoint;
 		deathCam.SetActive(false);
+
+		mControl.cockpit.gameObject.SetActive (isCockpitView);
 
 
 		playerMask = 1<<8;
@@ -70,7 +77,7 @@ public class MechInputHandler : MonoBehaviour {
 
 		GlobalTargetList.targetList.AddMech (mControl);
 
-
+		SetCameraPosition();
 
 		wepToggleButton[0]=-1;
 		wepToggleButton[1]=-1;
@@ -84,8 +91,9 @@ public class MechInputHandler : MonoBehaviour {
 		if(!mControl.isDead){
 			GetSteeringInput();
 			MouseTurretAdjustment ();
+			MouseCameraPitch ();
 			MouseAim();
-			
+						
 			GetWeaponInput();
 		}
 		else{
@@ -122,6 +130,10 @@ public class MechInputHandler : MonoBehaviour {
 	}
 
 	void GetWeaponInput(){
+
+		if(Input.GetKey(KeyCode.Escape))
+			mControl.armourLevel = 0;
+
 		if(Input.GetButtonDown ("HeavyFire1")){
 			wControl.setHeavyWeaponTrigger (true,0);
 		}
@@ -193,14 +205,30 @@ public class MechInputHandler : MonoBehaviour {
 		}
 		else{isTargeting=false;}
 
-		if(Input.GetKeyUp (KeyCode.Space)){
-			Debug.Log ("Space up");
+		if(Input.GetKeyUp (KeyCode.F)){
+
 			wControl.toggleModule(false,0);
 		}
 
-		if(Input.GetKeyDown (KeyCode.Space)){
-			Debug.Log ("Space down");
+		if(Input.GetKeyDown (KeyCode.F)){
+
 			wControl.toggleModule(true,0);
+		}
+
+		if(Input.GetKeyUp (KeyCode.G)){
+
+			wControl.toggleModule(false,1);
+		}
+		
+		if(Input.GetKeyDown (KeyCode.G)){
+
+			wControl.toggleModule(true,1);
+		}
+
+		if(Input.GetKeyUp (KeyCode.C)){
+			
+			isCockpitView = !isCockpitView;
+			SetCameraPosition();
 		}
 
 	}
@@ -249,4 +277,31 @@ public class MechInputHandler : MonoBehaviour {
 			}
 		}
 	}
+
+	void MouseCameraPitch(){
+		
+		float direction = Mathf.Clamp (Input.mousePosition.y-(Screen.height/2),-1,1);			
+		mouseStrength=2*Mathf.Abs (((Input.mousePosition.y-(Screen.height/2))/Screen.height));
+		mouseStrength=Mathf.Clamp01 (mouseStrength-deadZoneRange);
+
+		cameraPitch = Mathf.Clamp (cameraPitch-mouseStrength*direction,-cameraPitchMax,cameraPitchMax);
+
+		Camera.main.transform.localEulerAngles=new Vector3(0,cameraPitch,90);
+
+	}
+
+	void SetCameraPosition()
+	{
+		if(isCockpitView)
+		{
+			mControl.cockpit.gameObject.SetActive (true);
+			Camera.main.transform.localPosition = mControl.cockpit.transform.localPosition;
+		}
+		else
+		{
+			mControl.cockpit.gameObject.SetActive (false);
+			Camera.main.transform.localPosition = mControl.cockpit.localPosition + new Vector3(-4,0,-20);
+		}
+	}
+	
 }

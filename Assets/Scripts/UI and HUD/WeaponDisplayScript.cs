@@ -17,6 +17,7 @@ public class WeaponDisplayScript : MonoBehaviour {
 	Color baseColor;
 	public Color overheatColor;
 	public Color cannotFireColor;
+	public Color ammoDepletedColor;
 
 
 	// Use this for initialization
@@ -24,13 +25,18 @@ public class WeaponDisplayScript : MonoBehaviour {
 		lockOnReticle = null;
 
 		if(isHeavyWeapon){
+			if(weaponIndex >=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().heavyWeaponList.Length)
+				Destroy (gameObject);
 			wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().heavyWeaponList[weaponIndex];
 		}
 		else{
+			if(weaponIndex >=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList.Length)
+				Destroy (gameObject);
 			wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList[weaponIndex];
 		}
 
-		if(wControl==null){
+		if(wControl==null)
+		{
 			Destroy (gameObject);
 		}
 		else{
@@ -69,6 +75,10 @@ public class WeaponDisplayScript : MonoBehaviour {
 		if(wControl.isOverheating){
 			newColor=overheatColor;
 		}
+		else if((wControl.ammoLevel == 0) && wControl.ammoMaxLevel > 0)
+		{
+			newColor=ammoDepletedColor;
+		}
 		else if(!wControl.canFire){
 			newColor=cannotFireColor;
 		}
@@ -93,16 +103,16 @@ public class WeaponDisplayScript : MonoBehaviour {
 			infoText.text=wControl.ammoLevel.ToString ();
 		}
 		else{
-			infoText.text="";
+			infoText.text=Mathf.Clamp (Mathf.RoundToInt(wControl.myController.energyLevel/wControl.energyPerShot),0,1000).ToString ();
 		}
 	}
 
 	void CheckForLock(){
 
-		if((wControl.requiresLock)&&(wControl.triggered)&&(wControl.lockTransform)){
+		if((wControl.requiresLock)&&(wControl.triggered)&&(wControl.myController.lockedTarget)&&(wControl.lockOnRatio > 0)){
 			if(lockOnReticle==null){lockOnReticle = ((GameObject)Instantiate(Resources.Load ("MissileLockBrackets"))).transform;}
 			else{
-					lockOnReticle.position=wControl.lockTransform.position+new Vector3(0,5,0);
+					lockOnReticle.position=wControl.myController.lockedTarget.position+new Vector3(0,5,0);
 					float lockRatio = Mathf.Clamp (wControl.lockOnRatio*200f,12f,200f);
 					
 				if(lockRatio<=15f){lockOnReticle.renderer.material.color=Color.yellow;}
@@ -112,10 +122,10 @@ public class WeaponDisplayScript : MonoBehaviour {
 			}
 		}
 		else{
-					if(lockOnReticle!=null){
-						Destroy(lockOnReticle.gameObject);
-						lockOnReticle=null;
-					}
+			if(lockOnReticle!=null){
+				Destroy(lockOnReticle.gameObject);
+				lockOnReticle=null;
+			}
 		}
 	}
 }

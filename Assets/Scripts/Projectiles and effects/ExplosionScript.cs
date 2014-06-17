@@ -12,6 +12,8 @@ public class ExplosionScript : MonoBehaviour {
 
 	public Transform visibleShock;
 
+	AudioSource mySound;
+
 	float shockDeath;
 
 	ParticleSystem particles;
@@ -25,6 +27,10 @@ public class ExplosionScript : MonoBehaviour {
 		visibleShock.renderer.material.color=new Vector4(myLight.color.r,myLight.color.g,myLight.color.b,1f);
 
 		shockDeath=Time.time+shockLife;
+
+		mySound = transform.GetComponent<AudioSource>();
+		mySound.pitch = Random.Range (0.7f,1.3f);
+		mySound.Play ();
 	}
 	
 	// Update is called once per frame
@@ -49,7 +55,7 @@ public class ExplosionScript : MonoBehaviour {
 	void OnTriggerEnter(Collider collide){
 		if(collide.CompareTag("DamageObject")){
 
-			collide.transform.BroadcastMessage("TakeDamage",new CollisionDataContainer(maxDamage,transform.position,transform.position-collide.transform.position));
+			collide.transform.BroadcastMessage("TakeDamage",new CollisionDataContainer(maxDamage,collide.ClosestPointOnBounds(transform.position),transform.position-collide.transform.position));
 		}
 	}
 

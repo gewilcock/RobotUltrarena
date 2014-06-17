@@ -5,24 +5,34 @@ public class EquipMenuControllerScript : MonoBehaviour {
 	public TextMesh Weaponname;
 	public TextMesh Weaponstats;
 
+	public MeshFilter weaponModel;
+
+	Vector3 originLocation;
+
 	public EquipmentSlotButtonScript[] mechWeapons;
 	public EquipmentSlotButtonScript[] mechHeavyWeapons;
 	public EquipmentSlotButtonScript[] mechModules;
 
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 		hideInactiveSlots();
 		populateSlots();
 
-		mechWeapons[0].isToggled = true;
+		toggleButtons(mechWeapons[0]);
 		updateText ();
+
 	}
 	
-	
+	void Update()
+	{
+		weaponModel.transform.RotateAround (weaponModel.transform.parent.position,Vector3.up,45*Time.deltaTime);
+	}
+
 	void updateText () {
 
 		populateSlots ();
 
+		weaponModel.mesh = null;
 		string namestring = "";
 		string statistics = "";
 
@@ -46,12 +56,18 @@ public class EquipMenuControllerScript : MonoBehaviour {
 					if(GarageSpawnerScript.Spawner.wControl.weaponList[w].energyPerShot>0)
 						statistics += "Energy per Shot: \t\t\t"+GarageSpawnerScript.Spawner.wControl.weaponList[w].energyPerShot+"\n";
 
+					weaponModel.mesh = GarageSpawnerScript.Spawner.wControl.weaponList[w].GetComponentInChildren<MeshFilter>().mesh;
+
+					weaponModel.transform.parent.rotation = Quaternion.identity;
+					weaponModel.transform.rotation = Quaternion.identity;
+					weaponModel.transform.localPosition = new Vector3(0,0,-2f);
 
 				}
-								
+				else
+					weaponModel.mesh = null;
 
 			}
-			
+
 		}
 		
 		for(int w=0; w < mechHeavyWeapons.Length; w++)
@@ -59,7 +75,29 @@ public class EquipMenuControllerScript : MonoBehaviour {
 			if(mechHeavyWeapons[w].isToggled)
 			{
 				if(GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w] != null)
+				{
 					namestring = GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].gameObject.name;
+
+					statistics = "Range: \t\t\t\t"+GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].weaponRange+"m\n";
+					statistics += "Refire Rate: \t\t\t"+GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].refireTime+"s\n";
+					statistics += "Heat per shot: \t\t\t"+GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].heatPerShot+"\n";
+					statistics += "Cooldown rate: \t\t\t"+GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].heatSinkRate+"/s\n";
+					if(GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].ammoMaxLevel>0)
+					{
+						statistics += "Max Ammunition: \t\t"+GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].ammoMaxLevel+"\n";
+						statistics += "Ammo per Shot: \t\t\t"+GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].ammoPerShot+"\n";
+					}
+					if(GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].energyPerShot>0)
+						statistics += "Energy per Shot: \t\t\t"+GarageSpawnerScript.Spawner.wControl.weaponList[w].energyPerShot+"\n";
+
+					weaponModel.mesh = GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].GetComponentInChildren<MeshFilter>().mesh;
+
+					weaponModel.transform.parent.rotation = Quaternion.identity;
+					weaponModel.transform.rotation = Quaternion.identity;
+					weaponModel.transform.localPosition = Vector3.zero;
+				}
+				else
+					weaponModel.mesh = null;
 
 			}
 			
@@ -70,7 +108,22 @@ public class EquipMenuControllerScript : MonoBehaviour {
 			if(mechModules[w].isToggled)
 			{
 				if(GarageSpawnerScript.Spawner.wControl.moduleList[w] != null)
+				{
 					namestring = GarageSpawnerScript.Spawner.wControl.moduleList[w].gameObject.name;
+
+					if(GarageSpawnerScript.Spawner.wControl.moduleList[w].isToggledModule)
+						statistics = "TOGGLED MODULE\nEnable and disable manually.\n\n";
+					else
+						statistics = "ACTIVE MODULE\nHold down button to apply effect.\n\n";
+
+					statistics += "Recharges:\t\t\t"+GarageSpawnerScript.Spawner.wControl.moduleList[w].canRecharge+"\n";
+					if(GarageSpawnerScript.Spawner.wControl.moduleList[w].energyCost>0)
+						statistics += "Energy cost:\t\t\t"+GarageSpawnerScript.Spawner.wControl.moduleList[w].energyCost+"/sec\n";
+					if(GarageSpawnerScript.Spawner.wControl.moduleList[w].abilityCapacity>0)
+						statistics += "Total operational capacity:\t\t"+GarageSpawnerScript.Spawner.wControl.moduleList[w].abilityCapacity+" secs\n";
+
+				}
+
 			}
 		}
 
@@ -86,20 +139,36 @@ public class EquipMenuControllerScript : MonoBehaviour {
 
 	void hideInactiveSlots()
 	{
-		for(int w=0; w < GarageSpawnerScript.Spawner.wControl.weaponList.Length; w++)
+		for(int w=0; w < mechWeapons.Length; w++)
 		{
-			mechWeapons[w].gameObject.SetActive (true);
-			mechWeapons[w].myMenu =this;
+			mechWeapons[w].gameObject.SetActive (false);
+
+			if(w<GarageSpawnerScript.Spawner.wControl.weaponList.Length)
+			{
+				mechWeapons[w].gameObject.SetActive (true);
+				mechWeapons[w].myMenu =this;
+			}
+
+
 		}
-		for(int h=0; h < GarageSpawnerScript.Spawner.wControl.heavyWeaponList.Length; h++)
+		for(int h=0; h < mechHeavyWeapons.Length; h++)
 		{
-			mechHeavyWeapons[h].gameObject.SetActive (true);
-			mechHeavyWeapons[h].myMenu =this;
+			mechHeavyWeapons[h].gameObject.SetActive (false);
+
+			if(h<GarageSpawnerScript.Spawner.wControl.heavyWeaponList.Length){
+				mechHeavyWeapons[h].gameObject.SetActive (true);
+				mechHeavyWeapons[h].myMenu =this;
+			}
+
 		}
-		for(int m=0; m < GarageSpawnerScript.Spawner.wControl.moduleList.Length; m++)
+		for(int m=0; m < mechModules.Length; m++)
 		{
-			mechModules[m].gameObject.SetActive (true);
-			mechModules[m].myMenu =this;
+			mechModules[m].gameObject.SetActive (false);
+			if(m<GarageSpawnerScript.Spawner.wControl.moduleList.Length)
+			{
+				mechModules[m].gameObject.SetActive (true);
+				mechModules[m].myMenu =this;
+			}
 		}
 	}
 

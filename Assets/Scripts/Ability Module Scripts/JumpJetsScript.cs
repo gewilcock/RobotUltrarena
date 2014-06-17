@@ -35,7 +35,7 @@ public class JumpJetsScript : AbilityModuleScript {
 	public override void activatedUpdate(){
 		thrustLevel = Mathf.Clamp(thrustLevel+(thrustAcceleration*Time.deltaTime),0,maxThrust);
 		mControl.JumpMech (thrustLevel);
-		wControl.heatLevel +=heatCost*Time.deltaTime;
+		wControl.heatLevel += heatCost*Time.deltaTime;
 	}
 	
 }

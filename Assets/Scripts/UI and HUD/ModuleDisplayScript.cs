@@ -14,8 +14,13 @@ public class ModuleDisplayScript : MonoBehaviour {
 	public Color cannotFireColor;
 	// Use this for initialization
 	void Start () {
+
 		wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>();
-		modControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().moduleList[moduleIndex];
+
+		modControl = null;
+
+		if(moduleIndex < MechInputHandler.playerController.GetComponentInChildren<WeaponController>().moduleList.Length)
+			modControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().moduleList[moduleIndex];
 
 		if(modControl==null){
 			Destroy (gameObject);

@@ -40,27 +40,28 @@ public class GlobalTargetList : MonoBehaviour {
 		for(int i=0; i<mechList.Count;i++){
 
 			if(mechList[i]!=null){
-				Transform testTarget=mechList[i].CockpitPosition;
+				if(!mechList[i].isDead){
+					Transform testTarget=mechList[i].AIAimPoint;
 
-				if(testTarget!=baseTransform){
-					rangeVector=testTarget.position-baseTransform.position;
-					float testRange = rangeVector.magnitude;
-					//Debug.Log ("testTarget is at range "+testRange.ToString () + "out of maximum" + maxScanRange.ToString ());
-					if((testRange<lastRange)&&(testRange>0.5)){
-						//Debug.Log ("Test range is adequate.");
+					if(testTarget!=baseTransform){
+						rangeVector=testTarget.position-baseTransform.position;
+						float testRange = rangeVector.magnitude;
+						//Debug.Log ("testTarget is at range "+testRange.ToString () + "out of maximum" + maxScanRange.ToString ());
+						if((testRange<lastRange)&&(testRange>0.5)){
+							//Debug.Log ("Test range is adequate.");
 
-						if(!Physics.Raycast (baseTransform.position,rangeVector,testRange,1<<12)){
-							//Debug.Log ("I can see this target through the terrain layer");
-							bestTarget=mechList[i];
-							lastRange=testRange;
+							if(!Physics.Raycast (baseTransform.position,rangeVector,testRange,1<<12)){
+								//Debug.Log ("I can see this target through the terrain layer");
+								bestTarget=mechList[i];
+								lastRange=testRange;
+							}
+							//else{Debug.Log ("Target failed the visibility test");}
 						}
-						//else{Debug.Log ("Target failed the visibility test");}
+
 					}
 
 				}
-
 			}
-
 		}
 
 		return bestTarget;

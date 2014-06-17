@@ -6,6 +6,7 @@ public class DiscreteProjectileScript : MonoBehaviour {
 	public float initialForce=10000f;
 	public float myDamage;
 
+	public float primeTime = 0.5f;
 
 	public Transform impactEffect;
 
@@ -14,6 +15,7 @@ public class DiscreteProjectileScript : MonoBehaviour {
 	// Use this for initialization
 	void Awake(){
 		myCollider = GetComponent<Rigidbody>();
+		primeTime+=Time.time;
 	}
 
 	void Start () {
@@ -24,6 +26,15 @@ public class DiscreteProjectileScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	void TakeDamage(CollisionDataContainer weh)
+	{
+		if(Time.time>=primeTime)
+		{
+			Instantiate (impactEffect,transform.position,transform.rotation);
+			Destroy (gameObject);
+		}
 	}
 
 	void OnCollisionEnter(Collision collision){

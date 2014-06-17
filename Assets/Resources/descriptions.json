@@ -1,0 +1,16 @@
+{
+"Dervish":"Small, fast machine that sacrifices armour and\nheavy weapons for a high maximum speed and\nimproved manoeuvring.",
+"Deathbringer":"A titan. Heavily armoured with dual heavy\nweapon slots, but slow and unable to equip \nmore than a single equipment module.",
+"Autogun":"Rapid-fire automatic ballistic weapon that\nchips away gradually at enemy armour.",
+"Coilgun":"Electromagnetically-propelled high-explosive\nshell launcher. Slow-firing but effective.",
+"Light Laser":"Medium-range, high-accuracy beam weapon.\nDeals moderate damage over time.",
+"Heavy Laser":"Medium-range, high-accuracy beam weapon.\nDeals heavy damage over time.",
+"Shotgun":"High-spread, slow-firing ballistic weapon.\nLethal at close range.",
+"Dumb Missile":"Missile swarm with rudimentary guidance\nsteers to where it is aimed on launch.",
+"Homing Missile":"Missile swarm with smarter guidance steers\nto a target locked by the pilot before launch.",
+"Force Barrier":"Kinetic barrier that absorbs a portion of incoming\nweapons damage at the cost of an equivalent\namount of energy.",
+"Jump Jets":"By venting jets of reactor plasma, propel yourself\nskywards. Also uses lateral thrusters to increase\nturning rate while active.",
+"ArmaGel Unit":"A capillary system in your armour plating\ndistributes a nanite/ceramic epoxy that fills in\nand regenerates damaged armour in the field.",
+"Emergency Battery":"Accelerates energy cache recharge using spare\npower from the emergency battery's stores.\nGood for prolonged firefights.",
+"Active Cooling":"Accelerates reactor cooling by venting coolant\nand replacing it with fresh coolant from its\nstores. Cannot be replenished once depleted."
+}
