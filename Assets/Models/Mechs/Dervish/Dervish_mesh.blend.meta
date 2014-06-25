@@ -1,0 +1,262 @@
+fileFormatVersion: 2
+guid: 8921104149a4a464eb6ed4f126aa1532
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Armature
+    100002: b_LeftFoot
+    100004: b_LeftKnee
+    100006: b_LeftShin
+    100008: b_LeftThigh
+    100010: b_RightFoot
+    100012: b_RightKnee
+    100014: b_RightShin
+    100016: b_RightThigh
+    100018: b_Root
+    100020: b_Torso
+    100022: b_Waist
+    100024: DeathBringer_mesh
+    100026: //RootNode
+    100028: Dervish_mesh
+    400000: Armature
+    400002: b_LeftFoot
+    400004: b_LeftKnee
+    400006: b_LeftShin
+    400008: b_LeftThigh
+    400010: b_RightFoot
+    400012: b_RightKnee
+    400014: b_RightShin
+    400016: b_RightThigh
+    400018: b_Root
+    400020: b_Torso
+    400022: b_Waist
+    400024: DeathBringer_mesh
+    400026: //RootNode
+    400028: Dervish_mesh
+    4300000: DeathBringer_mesh
+    4300002: Dervish_mesh
+    7400000: Default Take
+    7400002: Death
+    7400004: Stationary
+    7400006: Walk
+    7400008: Walk
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: DeathBringer_mesh
+    13700002: Dervish_mesh
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: 0
+    animationPositionError: 0
+    animationScaleError: 0
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Walk
+      takeName: Walk
+      firstFrame: 0
+      lastFrame: 12
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/b_Root
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee/b_LeftShin
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee/b_LeftShin/b_LeftFoot
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee/b_RightShin
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee/b_RightShin/b_RightFoot
+        weight: 1
+      - path: Armature/b_Root/b_Torso
+        weight: 1
+      - path: Armature/b_Root/b_Waist
+        weight: 1
+      - path: DeathBringer_mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Stationary
+      takeName: Stationary
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/b_Root
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee/b_LeftShin
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee/b_LeftShin/b_LeftFoot
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee/b_RightShin
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee/b_RightShin/b_RightFoot
+        weight: 1
+      - path: Armature/b_Root/b_Torso
+        weight: 1
+      - path: Armature/b_Root/b_Waist
+        weight: 1
+      - path: DeathBringer_mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Death
+      takeName: Death
+      firstFrame: 0
+      lastFrame: 58
+      wrapMode: 1
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/b_Root
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee/b_LeftShin
+        weight: 1
+      - path: Armature/b_Root/b_LeftThigh/b_LeftKnee/b_LeftShin/b_LeftFoot
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee/b_RightShin
+        weight: 1
+      - path: Armature/b_Root/b_RightThigh/b_RightKnee/b_RightShin/b_RightFoot
+        weight: 1
+      - path: Armature/b_Root/b_Torso
+        weight: 1
+      - path: Armature/b_Root/b_Waist
+        weight: 1
+      - path: DeathBringer_mesh
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 

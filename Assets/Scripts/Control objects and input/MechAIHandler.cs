@@ -104,12 +104,36 @@ public class MechAIHandler : MonoBehaviour {
 
 	void populateMinMaxRanges()
 	{
-		for(int i=0; i<wControl.weaponList.Length; i++)
+		if (wControl == null)
+			return;
+
+		if (wControl.weaponList == null)
+			return;
+
+		if (minTargetAttackRadius == null)
 		{
-			if(minTargetAttackRadius>wControl.weaponList[i].weaponSafetyRange)
+			Debug.Log("minTargetAttackRadius is null");
+			return;
+		}
+
+		for(int i=0; i < wControl.weaponList.Length; i++)
+		{
+			if (wControl.weaponList[i] == null)
 			{
-				minTargetAttackRadius = wControl.weaponList[i].weaponSafetyRange;
+				Debug.Log("wControl.weaponList[i] is null");
+				continue;
 			}
+
+			if (wControl.weaponList[i].weaponSafetyRange == null)
+			{
+				Debug.Log("wControl.weaponList[i].weaponSafetyRange is null");
+				continue;
+			}
+
+			if(minTargetAttackRadius > wControl.weaponList[i].weaponSafetyRange)
+				{
+					minTargetAttackRadius = wControl.weaponList[i].weaponSafetyRange;
+				}
 
 			if(maxTargetAttackRadius>wControl.weaponList[i].weaponRange)
 			{

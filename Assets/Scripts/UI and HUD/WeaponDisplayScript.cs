@@ -25,14 +25,20 @@ public class WeaponDisplayScript : MonoBehaviour {
 		lockOnReticle = null;
 
 		if(isHeavyWeapon){
-			if(weaponIndex >=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().heavyWeaponList.Length)
+			var heavyWeaponList = MechInputHandler.playerController.GetComponentInChildren<WeaponController>().heavyWeaponList;
+
+			if(weaponIndex >= heavyWeaponList.Length)
 				Destroy (gameObject);
-			wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().heavyWeaponList[weaponIndex];
+			else
+				wControl = heavyWeaponList[weaponIndex];
 		}
 		else{
-			if(weaponIndex >=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList.Length)
+			var weaponList = MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList;
+
+			if(weaponIndex >= weaponList.Length)
 				Destroy (gameObject);
-			wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList[weaponIndex];
+			else
+				wControl = weaponList[weaponIndex];
 		}
 
 		if(wControl==null)
