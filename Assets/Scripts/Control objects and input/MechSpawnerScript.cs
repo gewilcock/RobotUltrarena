@@ -40,7 +40,7 @@ public class MechSpawnerScript : MonoBehaviour
 
             if (weh.isPlayer)
             {
-                var playerCamera = (GameObject)Instantiate(PlayerCameraPrefab, Vector3.zero, Quaternion.identity);
+                Instantiate(PlayerCameraPrefab, Vector3.zero, Quaternion.identity);
 				newMech = (GameObject)Instantiate(weh.myMech, playerStartLocation.position, playerStartLocation.rotation);
                 MechInputHandler handler = (MechInputHandler)newMech.AddComponent("MechInputHandler");
 
@@ -49,13 +49,13 @@ public class MechSpawnerScript : MonoBehaviour
                 Invoke("SpawnHUD", 0.1f);
 
 				var northBarrier = GameObject.Find("NorthBarrier");
-				northBarrier.GetComponent<BarrierScript>().player = playerCamera.transform;
+				northBarrier.GetComponent<BarrierScript>().player = Camera.main.transform;
 				var southBarrier = GameObject.Find("SouthBarrier");
-				southBarrier.GetComponent<BarrierScript>().player = playerCamera.transform;
+				southBarrier.GetComponent<BarrierScript>().player = Camera.main.transform;
 				var eastBarrier = GameObject.Find("EastBarrier");
-				eastBarrier.GetComponent<BarrierScript>().player = playerCamera.transform;
+				eastBarrier.GetComponent<BarrierScript>().player = Camera.main.transform;
 				var westBarrier = GameObject.Find("WestBarrier");
-				westBarrier.GetComponent<BarrierScript>().player = playerCamera.transform;
+				westBarrier.GetComponent<BarrierScript>().player = Camera.main.transform;
 
             }
             else
@@ -63,6 +63,7 @@ public class MechSpawnerScript : MonoBehaviour
                 newMech = (GameObject)Instantiate(weh.myMech, new Vector3(UnityEngine.Random.Range(30, 2200), 500, UnityEngine.Random.Range(30, 2200)), Quaternion.identity);
                 newMech.AddComponent("MechAIHandler");
             }
+
             RaycastHit groundhit;
             Physics.Raycast(newMech.transform.position, Vector3.down, out groundhit, 1000f);
             newMech.transform.position = groundhit.point;
