@@ -1,21 +1,27 @@
-Base path: C:/Program Files (x86)/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-1-12576
+Base path: C:/Program Files/Unity36f/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-1-4432
 Cmd: getPlatforms
 Cmd: preprocess
-  insize=464 outsize=464 ok=1
+  insize=683 outsize=683 ok=1
 Cmd: preprocess
-  insize=1101 outsize=904 ok=1
-Cmd: preprocess
-  insize=1654 outsize=1035 ok=1
-Cmd: preprocess
-  insize=3105 outsize=1735 ok=1
-Cmd: preprocess
-  insize=708 outsize=708 ok=1
-Cmd: preprocess
-  insize=743 outsize=743 ok=1
-Cmd: preprocess
-  insize=1574 outsize=702 ok=1
+  insize=1846 outsize=1284 ok=1
 Cmd: compileSnippet
-  api=1 type=0 insize=2798 outsize=253 kw=DIRECTIONAL ok=1
+  error: 1 plat 1 at (66): implicit cast from "float4" to "half3"
+  error: 1 plat 1 at (67): implicit cast from "half4" to "half3"
+  error: 2 plat 1 at /UnityCG.cginc(75): variable "tangent" domain conflicts with semantics "TANGENT"
+  error: 2 plat 1 at /UnityCG.cginc(76): variable "normal" domain conflicts with semantics "NORMAL"
+  api=1 type=0 insize=5559 outsize=0 kw=DIRECTIONAL LIGHTMAP_OFF DIRLIGHTMAP_OFF ok=0
+Cmd: preprocess
+  insize=838 outsize=838 ok=1
+Cmd: preprocess
+  insize=2390 outsize=838 ok=1
 Cmd: compileSnippet
-  api=1 type=1 insize=2798 outsize=337 kw=DIRECTIONAL ok=1
+  api=1 type=0 insize=1131 outsize=206 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1131 outsize=81 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=0 insize=1028 outsize=202 kw= ok=1
+Cmd: compileSnippet
+  api=1 type=1 insize=1028 outsize=81 kw= ok=1
+Cmd: preprocess
+  insize=763 outsize=763 ok=1

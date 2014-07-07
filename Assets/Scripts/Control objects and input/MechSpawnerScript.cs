@@ -45,6 +45,7 @@ public class MechSpawnerScript : MonoBehaviour {
 			else{
 				newMech = (GameObject)Instantiate (weh.myMech,new Vector3(UnityEngine.Random.Range (30,2200),500,UnityEngine.Random.Range(30,2200)),Quaternion.identity);
 				newMech.AddComponent ("MechAIHandler");
+
 			}
 			RaycastHit groundhit;
 			Physics.Raycast (newMech.transform.position,Vector3.down,out groundhit,1000f);
