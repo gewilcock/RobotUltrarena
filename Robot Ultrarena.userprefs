@@ -1,0 +1,44 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\UI and HUD\WeaponDisplayScript.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Control objects and input\PrefabLibraryScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\EquipMenuControllerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\ChassisMenuControllerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control objects and input\WeaponScript.cs" Line="212" Column="2" />
+      <File FileName="Assets\GarageMenuScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\GarageConfirmButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\GarageCancelButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\GarageLaunchMissionMenuScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI and HUD\DeathCameraScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\GarageSpawnerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control objects and input\MechSpawnerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI and HUD\WeaponDisplayScript.cs" Line="121" Column="60" />
+      <File FileName="Assets\Scripts\UI and HUD\HUDFPS.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\UI and HUD\HUDThrottleScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Ability Module Scripts\JumpJetsScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control objects and input\MechController.cs" Line="1" Column="1" />
+      <File FileName="Assets\MechStomp.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Ability Module Scripts\AbilityModuleScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Projectiles and effects\ImpactEmitterScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Projectiles and effects\ExplosionScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\EquipmentSlotButtonScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control objects and input\MechInputHandler.cs" Line="121" Column="28" />
+      <File FileName="Assets\Scripts\Control objects and input\WeaponController.cs" Line="42" Column="32" />
+      <File FileName="Assets\Scripts\UI and HUD\ModuleDisplayScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\WaterTriggerScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Ability Module Scripts\BatteryModule.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control objects and input\MechAIHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control objects and input\GlobalTargetList.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Projectiles and effects\DiscreteProjectileScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Projectiles and effects\MissileScript.cs" Line="15" Column="20" />
+      <File FileName="Assets\Scripts\Projectiles and effects\MissileSpawnerScript.cs" Line="24" Column="22" />
+      <File FileName="Assets\Scripts\UI and HUD\AimReticleScript.cs" Line="80" Column="42" />
+      <File FileName="Assets\Scripts\UI and HUD\HUDTargetBracketScript.cs" Line="16" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

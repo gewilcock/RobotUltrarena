@@ -46,7 +46,19 @@ public class MechSpawnerScript : MonoBehaviour
 
                 handler.absThrottle = GameDataManagerScript.GameDataManager.playerOptions.useAbsoluteThrottle;
 
+<<<<<<< HEAD
                 Invoke("SpawnHUD", 0.1f);
+=======
+			}
+			else{
+				newMech = (GameObject)Instantiate (weh.myMech,new Vector3(UnityEngine.Random.Range (30,2200),500,UnityEngine.Random.Range(30,2200)),Quaternion.identity);
+				newMech.AddComponent ("MechAIHandler");
+
+			}
+			RaycastHit groundhit;
+			Physics.Raycast (newMech.transform.position,Vector3.down,out groundhit,1000f);
+			newMech.transform.position=groundhit.point;
+>>>>>>> upstream/master
 
 				var northBarrier = GameObject.Find("NorthBarrier");
 				northBarrier.GetComponent<BarrierScript>().player = Camera.main.transform;
