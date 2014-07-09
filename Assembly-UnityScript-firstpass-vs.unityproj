@@ -76,6 +76,9 @@
  <Reference Include="Ionic.Zip.Reduced">
  <HintPath>C:/Backup/gamedev/Unity3D/ultrarena/RobotUltrarena/Assets/AstarPathfindingProject/Plugins/DotNetZip/Ionic.Zip.Reduced.dll</HintPath>
  </Reference>
+ <Reference Include="JsonFx.Json">
+ <HintPath>C:/Backup/gamedev/Unity3D/ultrarena/RobotUltrarena/Assets/AstarPathfindingProject/Plugins/JsonFx/JsonFx.Json.dll</HintPath>
+ </Reference>
  <Reference Include="ICSharpCode.SharpZipLib">
  <HintPath>C:/Backup/gamedev/Unity3D/ultrarena/RobotUltrarena/Assets/plugins/ICSharpCode.SharpZipLib.dll</HintPath>
  </Reference>
