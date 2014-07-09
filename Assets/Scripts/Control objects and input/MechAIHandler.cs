@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using Pathfinding;
 public class MechAIHandler : MonoBehaviour {
 
 	const float MAX_AIM_DISTANCE = 1000f;
@@ -16,8 +16,8 @@ public class MechAIHandler : MonoBehaviour {
 
 	//AI control
 	bool hasMoveAITicked;
-	public float minMoveTickTime=1f;
-	public float maxMoveTickTime=3f;
+	public float minMoveTickTime=5f;
+	public float maxMoveTickTime=10f;
 	float nextMoveTick;
 
 	bool hasCombatAITicked;
@@ -29,15 +29,20 @@ public class MechAIHandler : MonoBehaviour {
 	float targetingTimeout=0;
 
 	//movement and steering variables
+	Seeker mySeeker;
+	public Path myPath;
+	bool recalcWalkTarget = true;
+	private int currentWaypoint = 0;
 	Vector3 targetLocation;
 	public float arrivalRadius =20f;
 
 	public float relativeAngle;
-	float absoluteAngle;
+	public float absoluteAngle;
 	float distanceToTarget;
 	public float collisionScanDistance=100f;
 
 	Vector3 steerLocation;
+
 	int collMask; //Mask for general AI visibility casts. Initialised in Star().
 	int terrainMask=(1<<12); //set up bitmask for terrain scan only
 
@@ -75,6 +80,14 @@ public class MechAIHandler : MonoBehaviour {
 		targetLocation = transform.position;
 		levelTerrain= GameObject.Find ("Terrain").GetComponent<Terrain>().terrainData;
 
+		mySeeker = (Seeker)gameObject.AddComponent ("Seeker");
+		mySeeker.startEndModifier.useRaycasting = true;
+		/*mySeeker.startEndModifier.useGraphRaycasting = true;*/
+		mySeeker.startEndModifier.exactEndPoint=StartEndModifier.Exactness.Interpolate;
+		mySeeker.startEndModifier.exactStartPoint=StartEndModifier.Exactness.Original;
+
+		gameObject.AddComponent ("FunnelModifier");
+
 		mControl.cockpit.gameObject.SetActive (false);
 
 		GlobalTargetList.targetList.AddMech(mControl);
@@ -94,7 +107,7 @@ public class MechAIHandler : MonoBehaviour {
 				CalculateAim();
 				CalculateShootyBang();
 				DetermineWalkTarget();
-				AvoidObstacles();
+				//AvoidObstacles();
 				CalculateSteering();
 
 			}
@@ -104,36 +117,12 @@ public class MechAIHandler : MonoBehaviour {
 
 	void populateMinMaxRanges()
 	{
-		if (wControl == null)
-			return;
-
-		if (wControl.weaponList == null)
-			return;
-
-		if (minTargetAttackRadius == null)
+		for(int i=0; i<wControl.weaponList.Length; i++)
 		{
-			Debug.Log("minTargetAttackRadius is null");
-			return;
-		}
-
-		for(int i=0; i < wControl.weaponList.Length; i++)
-		{
-			if (wControl.weaponList[i] == null)
+			if(minTargetAttackRadius>wControl.weaponList[i].weaponSafetyRange)
 			{
-				Debug.Log("wControl.weaponList[i] is null");
-				continue;
+				minTargetAttackRadius = wControl.weaponList[i].weaponSafetyRange;
 			}
-
-			if (wControl.weaponList[i].weaponSafetyRange == null)
-			{
-				Debug.Log("wControl.weaponList[i].weaponSafetyRange is null");
-				continue;
-			}
-
-			if(minTargetAttackRadius > wControl.weaponList[i].weaponSafetyRange)
-				{
-					minTargetAttackRadius = wControl.weaponList[i].weaponSafetyRange;
-				}
 
 			if(maxTargetAttackRadius>wControl.weaponList[i].weaponRange)
 			{
@@ -142,74 +131,70 @@ public class MechAIHandler : MonoBehaviour {
 		}
 	}
 
-	void DetermineWalkTarget(){
-
-		if(hasMoveAITicked){
-			bool recalc=false;
-
-			distanceToTarget = Vector2.Distance (new Vector2(targetLocation.x,targetLocation.z),new Vector2(mControl.transform.position.x,mControl.transform.position.z));
-			//Debug.Log ("I'm this far from target: "+distanceToTarget.ToString ());
-			if(distanceToTarget<=arrivalRadius){
-				//Debug.Log ("At destination!");
-				recalc=true;
-			}
-
+	public void DetermineWalkTarget(){			
+		if(hasMoveAITicked)
+		{
 			if(myTarget==null){
-
-				if(recalc){
-					
-					//Debug.Log ("Recalculating random target location");
-					targetLocation= new Vector3(Random.Range(0,levelTerrain.size.x),0,Random.Range (0,levelTerrain.size.z));
-					//Debug.Log ("targetLocation is "+targetLocation.ToString () +" out of size "+levelTerrain.size.ToString ());
-				}
+				if(recalcWalkTarget)		
+					targetLocation= new Vector3(Random.Range(0,levelTerrain.size.x),0,Random.Range (0,levelTerrain.size.z));					
 					
 			}
 			else{ //in combat
+				if(Random.Range (0,1)<=aggression)
+					targetLocation= myTarget.transform.position+myTarget.transform.rotation*Quaternion.AngleAxis(180,Vector3.up)*(Vector3.forward*maxTargetAttackRadius*(1-aggression));
 
-				//Debug.Log ("Recalculating position relative to attack target");
-				targetLocation= myTarget.transform.position + (myTarget.transform.rotation*Quaternion.AngleAxis(Random.Range(-90,90),Vector3.up)*new Vector3(0,0,minTargetAttackRadius+(maxTargetAttackRadius-minTargetAttackRadius)*0.5f*(1-aggression)));
-					
 			}
-			
+
+			mySeeker.StartPath (transform.position,targetLocation, OnPathComplete);
+			recalcWalkTarget = false;
 		}
+
 		
 	}
 
-	void AvoidObstacles(){
-
-		if(hasMoveAITicked){
-
-			if((cControl.collisionFlags & CollisionFlags.Sides)!= 0){
-				mControl.setThrottle (-0.25f);
-			}
-
-			bool isBlocked=false;
-
-			RaycastHit obstacle;
-			isBlocked = Physics.Raycast (mControl.AIAimPoint.position,mControl.AIAimPoint.forward,out obstacle,100f,collMask);
-
-			if(isBlocked){
-				//Debug.Log ("There's a thing in my way");
-
-
-				if(!obstacle.transform.CompareTag("Terrain")){
-					//Debug.Log ("Bouncing.");
-					Vector3 bouncevector=(obstacle.point-mControl.AIAimPoint.position);
-					float bouncedistance=bouncevector.magnitude;
-					bouncevector.Normalize();
-					bouncedistance=Mathf.Clamp (bouncedistance,8f,50f);
-					steerLocation=obstacle.point+(Vector3.Reflect (bouncevector,obstacle.normal)*bouncedistance);
-
-
-					float newTick=Vector3.Distance (steerLocation,mControl.transform.position)/cControl.velocity.magnitude;
-					nextMoveTick = Time.time+(newTick*0.9f);
-					//Debug.Log ("Extending tick by "+newTick.ToString ());
-				}
-			}
-			else{
-				steerLocation=targetLocation;
-			}
+	public void OnPathComplete (Path p) {
+		Debug.Log ("Path returned. Error: "+p.error);
+		if (!p.error) {
+			myPath = p;
+			//Reset the waypoint counter
+			currentWaypoint = 0;
+			
 		}
+	}
+
+	public virtual void targetReached()
+	{
+		recalcWalkTarget = true;
+		hasMoveAITicked = true;
+	}
+
+	void FixedUpdate()
+	{
+
+
+
+				if (myPath == null) {
+					//We have no path to move after yet
+					return;
+				}
+				if (currentWaypoint >= myPath.vectorPath.Count) {
+					
+					targetReached ();
+					return;
+					
+				}
+				
+				//set steering location to next waypoint
+				steerLocation = myPath.vectorPath[currentWaypoint];
+				
+				//Check if we are close enough to the next waypoint
+				//If we are, proceed to follow the next waypoint
+				if (Vector3.Distance (transform.position,myPath.vectorPath[currentWaypoint]) <= arrivalRadius) {
+					currentWaypoint++;
+					return;
+				}
+
+
 
 	}
 
@@ -218,13 +203,14 @@ public class MechAIHandler : MonoBehaviour {
 		Quaternion relativeRot = Quaternion.FromToRotation (mControl.transform.rotation*Vector3.forward,steerLocation-mControl.transform.position);
 					
 					relativeAngle=relativeRot.eulerAngles.y;
-
+			
+					
 
 					absoluteAngle=Quaternion.Angle(mControl.transform.rotation,mControl.transform.rotation*relativeRot);
 					
 					if(myTarget==null)
 					{
-						if((absoluteAngle>5f)&&(distanceToTarget<10f))
+						if((absoluteAngle>30f))
 						{
 							
 								mControl.setThrottle (0.1f);
@@ -236,10 +222,10 @@ public class MechAIHandler : MonoBehaviour {
 						mControl.setThrottle(0.5f);
 					}
 
-					if(relativeAngle<175f){
+					if(relativeAngle<180f){
 						mControl.rotateMech (1);
 					}
-					else if(relativeAngle>185f){
+					else if(relativeAngle>180f){
 						mControl.rotateMech(-1);
 					}
 					
