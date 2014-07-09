@@ -5,6 +5,8 @@ Project("{F0C8FD0C-55D3-2C16-4D8D-81A7C5BA2190}") = "Robot Ultrarena", "Assembly
 EndProject
 Project("{F0C8FD0C-55D3-2C16-4D8D-81A7C5BA2190}") = "Robot Ultrarena", "Assembly-CSharp-vs.csproj", "{E7686716-CD87-FBBA-CC85-F3ACDB94D6A8}"
 EndProject
+Project("{F0C8FD0C-55D3-2C16-4D8D-81A7C5BA2190}") = "Robot Ultrarena", "Assembly-CSharp-Editor-vs.csproj", "{8FFCECC3-F6F3-D0DE-676B-8E4481D0F036}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,11 +21,15 @@ Global
 		{E7686716-CD87-FBBA-CC85-F3ACDB94D6A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7686716-CD87-FBBA-CC85-F3ACDB94D6A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7686716-CD87-FBBA-CC85-F3ACDB94D6A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FFCECC3-F6F3-D0DE-676B-8E4481D0F036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FFCECC3-F6F3-D0DE-676B-8E4481D0F036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FFCECC3-F6F3-D0DE-676B-8E4481D0F036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FFCECC3-F6F3-D0DE-676B-8E4481D0F036}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																																																																																																																																																																																																																			GlobalSection(MonoDevelopProperties) = preSolution
+																																																																																																																																																																																																																																																																																																		GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
