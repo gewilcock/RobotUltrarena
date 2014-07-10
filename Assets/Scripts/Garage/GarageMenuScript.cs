@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GarageMenuScript : MonoBehaviour
 {
-    public static GarageMenuScript garageMenuController;
+    public static GarageMenuScript Instance;
 
     Ray cursorRay;
     int mask = 1 << 9;
@@ -22,7 +22,7 @@ public class GarageMenuScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        garageMenuController = this;
+        Instance = this;
 
         GarageSpawnerScript.Spawner.spawnMech();
 
@@ -78,7 +78,7 @@ public class GarageMenuScript : MonoBehaviour
         menus[selectedMenu].gameObject.SetActive(false);
         selectedMenu++;
         menus[selectedMenu].gameObject.SetActive(true);
-        menus[selectedMenu].BroadcastMessage("updateText");
+        menus[selectedMenu].BroadcastMessage("updateText", SendMessageOptions.DontRequireReceiver);
     }
 
     public void cancelOption()
@@ -88,7 +88,7 @@ public class GarageMenuScript : MonoBehaviour
             menus[selectedMenu].gameObject.SetActive(false);
             selectedMenu--;
             menus[selectedMenu].gameObject.SetActive(true);
-            menus[selectedMenu].BroadcastMessage("updateText");
+			menus[selectedMenu].BroadcastMessage("updateText", SendMessageOptions.DontRequireReceiver);
         }
     }
 

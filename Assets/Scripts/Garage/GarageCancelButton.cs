@@ -5,7 +5,7 @@ public class GarageCancelButton : ButtonScript {
 	
 	public override void onClick ()
 	{
-		GarageMenuScript.garageMenuController.cancelOption();
+		GarageMenuScript.Instance.cancelOption();
 	}
 	
 }

@@ -6,6 +6,6 @@ public class GaragePageButtonScript : ButtonScript {
 
 	public override void onClick ()
 	{
-		GarageMenuScript.garageMenuController.shiftMenuPage (isBackButton);
+		GarageMenuScript.Instance.shiftMenuPage (isBackButton);
 	}
 }
