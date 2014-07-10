@@ -5,12 +5,14 @@ public class ChassisMenuControllerScript : MonoBehaviour
 {
     public TextMesh Mechname;
     public TextMesh Mechstats;
+
     // Use this for initialization
     int mechIndex;
 
     void Start()
     {
         var spawner = GarageSpawnerScript.Spawner;
+        
         if (spawner.wControl != null)
         {
             var mechChassis = PrefabLibraryScript.library.mechChassis;
