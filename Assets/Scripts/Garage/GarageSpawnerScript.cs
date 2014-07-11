@@ -87,9 +87,6 @@ public class GarageSpawnerScript : MonoBehaviour {
 				}
 			}
 		}
-
-
-
 	}
 
 	// Update is called once per frame
@@ -98,7 +95,6 @@ public class GarageSpawnerScript : MonoBehaviour {
 			transform.Rotate (0,20*Time.deltaTime,0);
 
 			wControl.aimPoint = (wControl.transform.forward*500f);
-
 		}
 	}
 }
