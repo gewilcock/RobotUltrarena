@@ -14,11 +14,10 @@ public class WeaponDisplayScript : MonoBehaviour {
 
 	Transform lockOnReticle;
 
-	Color baseColor;
-	public Color overheatColor;
-	public Color cannotFireColor;
-	public Color ammoDepletedColor;
-
+	public Material baseColor;
+	public Material overheatColor;
+	public Material cannotFireColor;
+	public Material ammoDepletedColor;
 
 	// Use this for initialization
 	void Start () {
@@ -53,7 +52,6 @@ public class WeaponDisplayScript : MonoBehaviour {
 			refireDisplay = transform.FindChild ("UIWRefireBar").GetComponent<ProgressBarScript>();
 			backplate = transform.FindChild ("UIWeaponDisplayBack").transform;
 
-			baseColor=backplate.renderer.material.color;
 
 			infoText=transform.FindChild ("UIWeaponInfoText").GetComponent<TextMesh>();
 			nameText=transform.FindChild ("UIWeaponNameText").GetComponent<TextMesh>();
@@ -77,26 +75,25 @@ public class WeaponDisplayScript : MonoBehaviour {
 	}
 
 	void ColorBars(){
-		Color newColor;
+
 		if(wControl.isOverheating){
-			newColor=overheatColor;
+			backplate.renderer.material=overheatColor;
 		}
 		else if((wControl.ammoLevel == 0) && wControl.ammoMaxLevel > 0)
 		{
-			newColor=ammoDepletedColor;
+			backplate.renderer.material=ammoDepletedColor;
 		}
 		else if(!wControl.canFire){
-			newColor=cannotFireColor;
+			backplate.renderer.material=cannotFireColor;
 		}
 		else{
-			newColor=baseColor;
+			backplate.renderer.material=baseColor;
 		}
 
-		if(!wControl.isActive){
-			newColor= new Color(newColor.r,newColor.g,newColor.b,0.1f);
-		}
-		
-		backplate.renderer.material.color=newColor;
+		if((!wControl.isActive)){
+			backplate.renderer.material.color= new Color(backplate.renderer.material.color.r,backplate.renderer.material.color.g,backplate.renderer.material.color.b,0.1f);
+		}	
+
 
 	}
 

@@ -37,8 +37,9 @@ public class WeaponController : MonoBehaviour {
 	public float yawLimit=45f;
 	public float pitchLimit=30f;
 
+	public float[] aimRange = new float[2];
+	public string[] aimTag = new string[2];
 	public bool inFireCone;
-
 	public Transform lockedTarget;
 
 	// Use this for initialization
@@ -63,6 +64,12 @@ public class WeaponController : MonoBehaviour {
 
 		groupCycle[0]=weaponsPerGroup;
 		groupCycle[1]=weaponsPerGroup;
+
+		aimRange[0]=1000f;
+		aimRange[1]=1000f;
+
+		aimTag[0]="";
+		aimTag[1]="";
 
 		aimPoint = transform.position+transform.forward*500f;
 	}
@@ -104,10 +111,29 @@ public class WeaponController : MonoBehaviour {
 
 				if((dy != relativeRot.eulerAngles.y)||(dx != relativeRot.eulerAngles.x)){inFireCone=false;}
 
+				//Perform weapon range and occlusion check
 				aimPivots[i].rotation = Quaternion.Euler (new Vector3(dx,dy,relativeRot.eulerAngles.z))*baseRotation;
 
+				int collMask = (1<<9)|(1<<13)|(1<<15); //set up mask to ignore HUD, weapon, and aimcast-permeable collision layers.
+				collMask =~collMask;
+
+				RaycastHit rangeHit;
+				bool hit = Physics.Raycast(aimPivots[i].position+(aimPivots[i].forward*2),aimPivots[i].forward, out rangeHit,1000f,collMask);
+
+				if(hit)
+				{
+					aimRange[i] = rangeHit.distance;
+					aimTag[i] = rangeHit.transform.tag;
+				}
+				else
+				{
+					aimRange[i] = 1000f;
+					aimTag[i] = "";
+				}
 
 			}
+
+
 		}
 		
 	}
@@ -246,6 +272,14 @@ public class WeaponController : MonoBehaviour {
 
 			}
 		}
+	}
+
+	void OnDrawGizmos(){
+
+		for(int i=0; i<aimPivots.Length; i++){		
+			Gizmos.DrawRay (aimPivots[i].position+(aimPivots[i].forward*2),aimPivots[i].forward*1000f);
+		}
+		
 	}
 
 }

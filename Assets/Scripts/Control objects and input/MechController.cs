@@ -181,14 +181,14 @@ public class MechController : MonoBehaviour {
 				wControl.isDead=true;
 				wControl.StopAllWeapons ();
 				allStop ();
-				GameObject weh=(GameObject)Instantiate (reactorBreachEffect,torsoBone.position,Quaternion.identity);
-				weh.GetComponent<MechsplosionScript>().myParent=torsoBone;
+				GameObject weh=(GameObject)Instantiate (reactorBreachEffect,AIAimPoint.position,Quaternion.identity);
+				weh.GetComponent<MechsplosionScript>().myParent=AIAimPoint;
 			}
 		}
 		else{
 			if(!animations.isPlaying){
 
-				Instantiate (deathExplosion,torsoBone.position,Quaternion.identity);
+				Instantiate (deathExplosion,AIAimPoint.position,Quaternion.identity);
 
 				Destroy (gameObject);
 			}
@@ -197,10 +197,17 @@ public class MechController : MonoBehaviour {
 	
 	public void JumpMech(float thrust){
 		if(thrust > 0)
-			mechMotor.inputJump = true;
-		else
-			mechMotor.inputJump = false;
-
-		transform.position += Vector3.up*thrust*Time.deltaTime;
+		{
+			mechMotor.SetGrounded(true);
+			transform.position += Vector3.up*thrust*Time.deltaTime;
+		}
+		else{
+			if(!mechMotor.IsGrounded())
+			{
+				mechMotor.SetGrounded(true);
+				mechMotor.inputJump = true;
+			}
+		}
+		mechMotor.SetJumping(true);			
 	}
 }

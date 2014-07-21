@@ -18,7 +18,7 @@ public class JumpJetsScript : AbilityModuleScript {
 		if((!isActive)&&(!isCharging)){
 			isActive = true;
 			Debug.Log ("firing jumpjets");
-			thrustLevel = 0;
+			thrustLevel = 10;
 			mControl.turnModifier +=turnRateBuff;
 		}
 	}

@@ -43,7 +43,7 @@ public class MechAIHandler : MonoBehaviour {
 
 	Vector3 steerLocation;
 
-	int collMask; //Mask for general AI visibility casts. Initialised in Star().
+	int collMask; //Mask for general AI visibility casts. Initialised in Start().
 	int terrainMask=(1<<12); //set up bitmask for terrain scan only
 
 

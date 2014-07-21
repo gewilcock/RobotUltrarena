@@ -32,7 +32,7 @@ public class UIHealthbarScript : MonoBehaviour {
 			healthBarBase.renderer.material.color=baseColor;
 		}	
 
-		infoText.text= "Armour: "+ Mathf.Ceil(mControl.armourLevel).ToString ();			
+		infoText.text= Mathf.Ceil(mControl.armourLevel).ToString ();			
 		
 	}
 }

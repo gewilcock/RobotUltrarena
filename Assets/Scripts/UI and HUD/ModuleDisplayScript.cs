@@ -10,9 +10,9 @@ public class ModuleDisplayScript : MonoBehaviour
     public int moduleIndex;
     public AbilityModuleScript modControl;
     WeaponController wControl;
-    Color baseColor;
-    public Color overheatColor;
-    public Color cannotFireColor;
+    public Material baseColor;
+    public Material overheatColor;
+    public Material cannotFireColor;
     // Use this for initialization
     void Start()
     {
@@ -36,8 +36,6 @@ public class ModuleDisplayScript : MonoBehaviour
             refireDisplay = transform.FindChild("UIWRefireBar").GetComponent<ProgressBarScript>();
             backplate = transform.FindChild("UIWeaponDisplayBack").transform;
 
-            baseColor = backplate.renderer.material.color;
-
             infoText = transform.FindChild("UIWeaponInfoText").GetComponent<TextMesh>();
             nameText = transform.FindChild("UIWeaponNameText").GetComponent<TextMesh>();
 
@@ -50,27 +48,22 @@ public class ModuleDisplayScript : MonoBehaviour
     {
         refireDisplay.fillRatio = modControl.capacityRatio;
 
-        Color newColor;
+		backplate.renderer.material = baseColor;
         if (wControl.isOverheating)
         {
-            newColor = overheatColor;
+			backplate.renderer.material = overheatColor;
         }
         else if (modControl.abilityCapacity > 0 && modControl.capacityRatio <= 0)
         {
-            newColor = cannotFireColor;
+			backplate.renderer.material = cannotFireColor;
         }
-        else
-        {
-            newColor = baseColor;
-        }
-
+        
         if (!modControl.isActive)
         {
-            newColor = new Color(newColor.r, newColor.g, newColor.b, 0.1f);
+			backplate.renderer.material.color =  new Color(backplate.renderer.material.color.r, backplate.renderer.material.color.g, backplate.renderer.material.color.b, 0.1f);
         }
 
-        backplate.renderer.material.color = newColor;
-
+        
         if (wControl.isOverheating)
         {
             infoText.text = "OVERHEATING";

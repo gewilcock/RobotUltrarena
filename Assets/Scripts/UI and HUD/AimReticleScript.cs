@@ -6,11 +6,19 @@ public class AimReticleScript : MonoBehaviour {
 	Ray aimRay;
 	Camera HUDCamera;
 	MechInputHandler pInput;
-	Color baseColor;
+
 	HUDTargetBracketScript currentBracket;
 	int playerMask;
 	int weaponPermeableMask;
 	int aimPermeableMask;
+
+	public Transform[] weaponRangeIndicator;
+	
+	public Material outOfArcColour;
+	public Material baseColour;
+	public Material validTargetColour;
+	public Material rechargeColour;
+	public Material overheatColour;
 
 	// Use this for initialization
 	void Start () {
@@ -24,24 +32,70 @@ public class AimReticleScript : MonoBehaviour {
 
 		HUDCamera=transform.parent.GetComponent<Camera>();
 		pInput = MechInputHandler.playerController;
-		baseColor=transform.renderer.material.color;
+
 	}
 	
 	// Update is called once per frame
 	void LateUpdate () {
-		Color newColor;
+
 
 		if(!pInput.wControl.inFireCone){
-			newColor = new Color(Color.gray.r,Color.gray.g,Color.gray.b,0.2f);
+			renderer.material.color = outOfArcColour.color;
+
+			for(int r=0; r<weaponRangeIndicator.Length; r++)
+			{
+				weaponRangeIndicator[r].renderer.material.color = outOfArcColour.color;
+			}
 		}
-		else if(pInput.isShootyTarget){
-			newColor = Color.red;
+		else if(pInput.wControl.isOverheating)
+		{
+			renderer.material.color = overheatColour.color;
+			
+			for(int r=0; r<weaponRangeIndicator.Length; r++)
+			{
+				weaponRangeIndicator[r].renderer.material.color = overheatColour.color;
+			}
+
 		}
 		else{
-			newColor = baseColor;
+
+			if(pInput.wControl.aimTag[0] == "DamageObject")
+			{
+				renderer.material.color = validTargetColour.color;
+			}
+			else 
+			{
+				renderer.material.color = baseColour.color;
+			}
+
+			for(int q=0; q<=2; q+=2)
+			{
+				for(int r=0; r<2; r++)
+				{
+					WeaponScript thisWeapon = pInput.wControl.weaponList[q+r];
+
+					if(thisWeapon !=null)
+					{
+						if(thisWeapon.isOverheating)
+							weaponRangeIndicator[q+r].renderer.material.color = overheatColour.color;
+						else if(!thisWeapon.canFire)
+							weaponRangeIndicator[q+r].renderer.material.color = rechargeColour.color;
+						else if((pInput.wControl.aimRange[q/2]<=thisWeapon.weaponRange)&&(pInput.wControl.aimTag[q/2] == "DamageObject"))
+							weaponRangeIndicator[q+r].renderer.material.color = validTargetColour.color;
+						else
+							weaponRangeIndicator[q+r].renderer.material.color = baseColour.color;
+					}
+					else
+					{
+						weaponRangeIndicator[q+r].renderer.material.color = baseColour.color;
+					}
+				}											
+						
+
+			}
+
 		}
 
-		transform.renderer.material.color=newColor;
 
 		if(pInput.isTargeting){
 			createTargetingBracket();

@@ -538,6 +538,11 @@ function IsJumping () {
 	return jumping.jumping;
 }
 
+function SetJumping(newJumping : boolean)
+{
+	jumping.jumping=newJumping;
+}
+
 function IsSliding () {
 	return (grounded && sliding.enabled && TooSteep());
 }
@@ -548,6 +553,10 @@ function IsTouchingCeiling () {
 
 function IsGrounded () {
 	return grounded;
+}
+
+function SetGrounded (newGrounded:boolean) {
+	grounded = newGrounded;
 }
 
 function TooSteep () {
