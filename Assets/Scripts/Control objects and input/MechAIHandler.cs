@@ -289,9 +289,11 @@ public class MechAIHandler : MonoBehaviour {
 		if(hasCombatAITicked){
 			aimDriftTarget=new Vector3(Random.Range (-myAccuracyDrift,myAccuracyDrift),Random.Range (-myAccuracyDrift,myAccuracyDrift),Random.Range (-myAccuracyDrift,myAccuracyDrift));
 
+			if(!wControl.inFireCone)
+				hasMoveAITicked = true;
 		}
 
-		aimDrift=Vector3.Slerp (aimDrift,aimDriftTarget,Time.deltaTime*0.5f);
+		aimDrift=Vector3.Slerp (aimDrift,aimDriftTarget,Time.deltaTime);
 
 
 		float relativeTargetAngle;
@@ -335,6 +337,8 @@ public class MechAIHandler : MonoBehaviour {
 		else{
 			wControl.aimPoint=aimRay.GetPoint (MAX_AIM_DISTANCE);
 		}
+
+
 		
 	}
 
@@ -342,21 +346,31 @@ public class MechAIHandler : MonoBehaviour {
 
 	void CalculateShootyBang(){
 
-		if(myTarget!=null){
-			if(hasCombatAITicked){
+		if(myTarget!=null)
+		{
+			if(hasCombatAITicked)
+			{
 				wControl.StopAllWeapons ();
-				if(wControl.heatRatio<0.8f){
-					if((wControl.inFireCone)&&(hit)){
+				if(wControl.heatRatio<0.8f)
+				{
+					if((wControl.inFireCone)&&(hit))
+					{
 						float targetdistance = targetVector.magnitude;
-						if(targetdistance<=400f){
-							if(!Physics.Raycast (mControl.AIAimPoint.position,targetVector,targetdistance,terrainMask)){
-								for(int i =0; i<wControl.weaponList.Length;i++)
+
+							if(!Physics.Raycast (mControl.AIAimPoint.position,targetVector,targetdistance,terrainMask))
+							{
+								
+								for(int q=0; q<=2; q+=2)
 								{
-									if(wControl.weaponList[i]!=null){
-										if((targetdistance<wControl.weaponList[i].weaponRange) && (targetdistance>wControl.weaponList[i].weaponSafetyRange))
-											wControl.weaponList[i].isActive = true;
-										else
-											wControl.weaponList[i].isActive = false;
+									for(int r=0; r<2; r++)
+									{
+										if(wControl.weaponList[q+r]!=null)
+										{
+											if((wControl.aimTag[q/2] == "DamageObject")&&(wControl.aimRange[q/2]<=wControl.weaponList[q+r].weaponRange) && (wControl.aimRange[q/2]>=wControl.weaponList[q+r].weaponSafetyRange))
+												wControl.weaponList[q+r].isActive = true;
+											else
+												wControl.weaponList[q+r].isActive = false;
+										}
 									}
 								}
 
@@ -364,11 +378,11 @@ public class MechAIHandler : MonoBehaviour {
 								wControl.SetWeaponTriggers (true,1);
 							}
 						
-						}
 					}
 				}
 			}
 		}
+
 		else{wControl.StopAllWeapons ();}
 
 	}
