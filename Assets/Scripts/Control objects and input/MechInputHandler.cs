@@ -26,6 +26,7 @@ public class MechInputHandler : MonoBehaviour {
 
 	public GameObject HUDObject;
 	GameObject deathCam;
+	GameObject radarCam;
 
 	float[] wepToggleButton = new float[2];
 
@@ -42,17 +43,18 @@ public class MechInputHandler : MonoBehaviour {
 
 		playerController=this;
 		deathCam = GameObject.Find ("DeathCamera");
+
 		Screen.showCursor=false;
 
 		Screen.lockCursor=true;
+
+		radarCam = GameObject.Find ("RadarCamera");
 
 	}
 
 
 	void Start () {
 
-//		GameObject newMech=(GameObject)Instantiate (MechType,transform.position,transform.rotation);
-//		newMech.transform.parent=this.transform;
 		gameObject.layer=8;
 		
 		mControl=GetComponent<MechController>();
@@ -62,7 +64,10 @@ public class MechInputHandler : MonoBehaviour {
 		Camera.main.transform.localPosition=new Vector3(-8f,0,-20);
 		Camera.main.transform.localEulerAngles=new Vector3(0f,0f,90f);
 
-		GameObject.Find ("RadarCamera").transform.parent=mControl.transform;
+		radarCam.transform.position = new Vector3(transform.position.x,radarCam.transform.position.y,transform.position.z);
+		radarCam.transform.parent=mControl.torsoBone;
+
+		transform.FindChild("RadarBlip").renderer.material.color = Color.green;
 
 		deathCam.GetComponent<DeathCameraScript>().playerMech=mControl.AIAimPoint;
 		deathCam.SetActive(false);

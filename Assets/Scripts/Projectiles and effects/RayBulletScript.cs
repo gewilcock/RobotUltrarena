@@ -8,11 +8,23 @@ public class RayBulletScript : MonoBehaviour {
 		
 		public float myDamage;
 		public GameObject hitEffect;
+		public GameObject tracerObject;
 		RaycastHit targetHit;
 		bool fired=false;
-		public float TracerProbability;
+		public float tracerProbability;
 		bool hit;
-			
+		
+		void Start()
+		{
+			if(tracerObject)
+			{
+				//if(Random.Range (0,1)<=tracerProbability)
+					Instantiate (tracerObject,transform.position,transform.rotation);
+
+			}
+		}
+
+
 		
 		// Update is called once per frame
 		void LateUpdate () {

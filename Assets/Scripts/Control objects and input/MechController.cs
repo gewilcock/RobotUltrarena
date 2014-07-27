@@ -5,6 +5,7 @@ public class MechController : MonoBehaviour {
 
 	//This script is responsible for mech movement and steering, health and animation management.
 
+	public GameObject damageSmokeEffect;
 	public GameObject reactorBreachEffect;
 	public GameObject deathExplosion;
 
@@ -29,6 +30,7 @@ public class MechController : MonoBehaviour {
 	public float totalDamage;
 
 	public bool hasTakenDamage=false;
+	public bool isSmoking = false;
 
 	//transforms and variables for torso rotation
 	public Transform torsoBone;
@@ -45,6 +47,9 @@ public class MechController : MonoBehaviour {
 	float momentumDampening;
 	public float speedModifier;
 	public float turnModifier;
+	float lastVelocity = 0;
+	public float collisionDamageSpeedRatio = 0.5f;
+	public float collisionDamageMax = 10f;
 
 	//Specialised variables for modules
 	public bool isShielded{get;set;}
@@ -78,8 +83,11 @@ public class MechController : MonoBehaviour {
 	void Update () {
 
 		hasTakenDamage=false;
-
-		mechMotor.inputMoveDirection = (transform.rotation*Vector3.forward*throttleLevel*(1+speedModifier));
+		if(cControl.isGrounded)
+		{
+			mechMotor.inputMoveDirection = (transform.rotation*Vector3.forward*throttleLevel*(1+speedModifier));
+		}
+		CollisionDamageCheck();
 		AssessDamage();
 		ApplyAnimations();
 
@@ -94,9 +102,13 @@ public class MechController : MonoBehaviour {
 	}
 
 	public void rotateMech(float direction){
-		momentumDampening = 1-(cControl.velocity.magnitude/maxDampingVelocity);
 
-		transform.Rotate (new Vector3(0f,mechTurnRate*Time.deltaTime*direction*momentumDampening*(1+turnModifier)));
+		if(cControl.isGrounded)
+		{
+			momentumDampening = 1-(cControl.velocity.magnitude/maxDampingVelocity);
+
+			transform.Rotate (new Vector3(0f,mechTurnRate*Time.deltaTime*direction*momentumDampening*(1+turnModifier)));
+		}
 	}
 
 	public void setThrottle(float newValue){
@@ -160,19 +172,49 @@ public class MechController : MonoBehaviour {
 
 			
 		hasTakenDamage=true;
+
+
 			
+	}
+
+	public void CollisionDamageCheck()
+	{
+		float currentV = cControl.velocity.magnitude;
+		float deltaV = currentV-lastVelocity;
+		float hitDelta = mechMotor.movement.maxForwardSpeed*collisionDamageSpeedRatio;
+
+		if(deltaV < 0)
+			if(Mathf.Abs (deltaV)>=hitDelta)
+			{
+				float collisionDamageTaken = collisionDamageMax*(Mathf.Abs (deltaV)-hitDelta)/hitDelta;
+
+				TakeDamage (new CollisionDataContainer(collisionDamageTaken,cControl.velocity,cControl.velocity.normalized));
+
+			}
+
+		
+
+		
+		lastVelocity = currentV;
 	}
 
 	void AssessDamage(){
 
-		/*if(totalDamage>0)
-			damageVector= damageVector/totalDamage;*/
 
 		damageVector = Vector3.Lerp (damageVector,Vector3.zero,Time.deltaTime*2);
 		totalDamage = Mathf.Lerp (totalDamage,0,Time.deltaTime*2);
 
 
+
 		if(!isDead){
+
+			if(armourLevel<20 && !isSmoking)
+			{
+				GameObject smoke = (GameObject)Instantiate (damageSmokeEffect);
+				smoke.transform.parent = torsoBone;
+				smoke.transform.localPosition = new Vector3(0,0,0);
+				isSmoking = true;
+			}
 
 			armourRatio=armourLevel/maxArmour;
 
@@ -196,18 +238,26 @@ public class MechController : MonoBehaviour {
 	}
 	
 	public void JumpMech(float thrust){
+
+
 		if(thrust > 0)
 		{
+
 			mechMotor.SetGrounded(true);
-			transform.position += Vector3.up*thrust*Time.deltaTime;
+
+			mechMotor.jumping.baseHeight = thrust;
+			mechMotor.inputJump = true;
 		}
 		else{
-			if(!mechMotor.IsGrounded())
+
+			mechMotor.inputJump = false;
+			/*if(!mechMotor.IsGrounded())
 			{
 				mechMotor.SetGrounded(true);
-				mechMotor.inputJump = true;
-			}
+
+			}*/
+
 		}
-		mechMotor.SetJumping(true);			
+		//mechMotor.SetJumping(true);	
 	}
 }

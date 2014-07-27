@@ -17,6 +17,7 @@ public class AimReticleScript : MonoBehaviour {
 	public Material outOfArcColour;
 	public Material baseColour;
 	public Material validTargetColour;
+	public Material noAmmoColour;
 	public Material rechargeColour;
 	public Material overheatColour;
 
@@ -59,7 +60,7 @@ public class AimReticleScript : MonoBehaviour {
 		}
 		else{
 
-			if(pInput.wControl.aimTag[0] == "DamageObject")
+			if(pInput.isShootyTarget)
 			{
 				renderer.material.color = validTargetColour.color;
 			}
@@ -78,6 +79,8 @@ public class AimReticleScript : MonoBehaviour {
 					{
 						if(thisWeapon.isOverheating)
 							weaponRangeIndicator[q+r].renderer.material.color = overheatColour.color;
+						else if((thisWeapon.ammoMaxLevel>0)&&(thisWeapon.ammoLevel==0))
+							weaponRangeIndicator[q+r].renderer.material.color = noAmmoColour.color;
 						else if(!thisWeapon.canFire)
 							weaponRangeIndicator[q+r].renderer.material.color = rechargeColour.color;
 						else if((pInput.wControl.aimRange[q/2]<=thisWeapon.weaponRange)&&(pInput.wControl.aimTag[q/2] == "DamageObject"))

@@ -17,8 +17,9 @@ public class JumpJetsScript : AbilityModuleScript {
 	public override void activateModule () {
 		if((!isActive)&&(!isCharging)){
 			isActive = true;
+			mControl.JumpMech (0);
 			Debug.Log ("firing jumpjets");
-			thrustLevel = 10;
+			thrustLevel = 0.5f;
 			mControl.turnModifier +=turnRateBuff;
 		}
 	}
@@ -27,14 +28,14 @@ public class JumpJetsScript : AbilityModuleScript {
 		if(isActive){
 			Debug.Log ("killing jumpjets");
 			isActive = false;
-			mControl.JumpMech(0);
+			mControl.JumpMech (thrustLevel);
 			mControl.turnModifier -= turnRateBuff;
 		}
 	}
 	
 	public override void activatedUpdate(){
 		thrustLevel = Mathf.Clamp(thrustLevel+(thrustAcceleration*Time.deltaTime),0,maxThrust);
-		mControl.JumpMech (thrustLevel);
+
 		wControl.heatLevel += heatCost*Time.deltaTime;
 	}
 	

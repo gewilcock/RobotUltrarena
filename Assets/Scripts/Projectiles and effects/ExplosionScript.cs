@@ -24,7 +24,7 @@ public class ExplosionScript : MonoBehaviour {
 		particles=GetComponent<ParticleSystem>();
 		myLight=GetComponent<Light>();
 		shockwave = GetComponent<SphereCollider>();
-		visibleShock.renderer.material.color=new Vector4(myLight.color.r,myLight.color.g,myLight.color.b,1f);
+		visibleShock.renderer.material.color=new Vector4(myLight.color.r,myLight.color.g,myLight.color.b,0.5f);
 
 		shockDeath=Time.time+shockLife;
 
@@ -37,10 +37,14 @@ public class ExplosionScript : MonoBehaviour {
 	void Update () {
 		float fwoomRatio = (1-((shockDeath-Time.time)/shockLife));
 
+
 		shockwave.radius=maxRadius;//*fwoomRatio;
 
 		visibleShock.localScale=new Vector3(maxSphereScale*fwoomRatio,maxSphereScale*fwoomRatio,maxSphereScale*fwoomRatio);
-		visibleShock.renderer.material.color=new Vector4(myLight.color.r,myLight.color.g,myLight.color.b,(1-fwoomRatio));
+		visibleShock.renderer.material.color=new Vector4(myLight.color.r,myLight.color.g,myLight.color.b,1-fwoomRatio);
+		//visibleShock.renderer.material.SetFloat ("_FresnelExponent",fwoomRatio*16);
+		if(visibleShock.renderer.material.color.a<=0)
+			visibleShock.gameObject.SetActive (false);
 
 		if(shockDeath<=Time.time){shockwave.enabled=false;}
 

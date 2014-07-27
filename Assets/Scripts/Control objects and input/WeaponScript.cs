@@ -96,6 +96,7 @@ public class WeaponScript : MonoBehaviour {
 
 		ApplySound();
 
+
 		refireRatio=(nextFireTime-Time.time)/refireTime;
 		refireRatio=Mathf.Clamp (refireRatio,0,1);
 	}
@@ -134,8 +135,14 @@ public class WeaponScript : MonoBehaviour {
 		if(ammoMaxLevel>0){
 			ammoLevel-=ammoPerShot;
 		}
-		
-		nextFireTime=Time.time+refireTime;
+
+		if((ammoMaxLevel>0)&&(ammoLevel==0))
+		{
+			nextFireTime=0;
+			weaponHeat = 0;
+		}
+		else
+			nextFireTime=Time.time+refireTime;
 
 	}
 
