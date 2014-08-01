@@ -53,9 +53,9 @@ public class PlaceholderMenuScript : MonoBehaviour {
 				GameDataManagerScript.GameDataManager.playerOptions.useAbsoluteThrottle=false;
 			}
 
-			GameDataManagerScript.GameDataManager.players[0].myHeavyWeapons[0]=PrefabLibraryScript.library.getHeavyWeapon(hWSetting);
-			GameDataManagerScript.GameDataManager.players[0].myModules[0]=PrefabLibraryScript.library.getAbilityModule(moduleSetting);
-			GameDataManagerScript.GameDataManager.players[0].myMech=PrefabLibraryScript.library.getMechChassis(selectedMech);
+			GameDataManagerScript.GameDataManager.players[0].myHeavyWeapons[0]=PrefabLibraryScript.Instance.getHeavyWeapon(hWSetting);
+			GameDataManagerScript.GameDataManager.players[0].myModules[0]=PrefabLibraryScript.Instance.getAbilityModule(moduleSetting);
+			GameDataManagerScript.GameDataManager.players[0].myMech=PrefabLibraryScript.Instance.getMechChassis(selectedMech);
 
 			Application.LoadLevel (1);
 		}

@@ -6,7 +6,7 @@ using SimpleJSON;
 
 public class PrefabLibraryScript : MonoBehaviour
 {
-	public static PrefabLibraryScript library;
+	public static PrefabLibraryScript Instance;
 	
 	public GameObject[] mechChassis;
 	public GameObject[] weapons;
@@ -17,7 +17,7 @@ public class PrefabLibraryScript : MonoBehaviour
 	
 	void Awake()
 	{
-		library = this;
+		Instance = this;
 		TextAsset descriptionFile = Resources.Load<TextAsset>("descriptions");
 		descriptionJSON = JSON.Parse(descriptionFile.text);		
 	}
