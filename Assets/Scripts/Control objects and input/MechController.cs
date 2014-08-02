@@ -8,6 +8,7 @@ public class MechController : MonoBehaviour {
 	public GameObject damageSmokeEffect;
 	public GameObject reactorBreachEffect;
 	public GameObject deathExplosion;
+	public GameObject debrisPrefab;
 
 	//Reference scripts
 	private CharacterMotor mechMotor;
@@ -231,6 +232,8 @@ public class MechController : MonoBehaviour {
 			if(!animations.isPlaying){
 
 				Instantiate (deathExplosion,AIAimPoint.position,Quaternion.identity);
+				GameObject DebrisPrefab = (GameObject)Instantiate (debrisPrefab,AIAimPoint.position,transform.rotation);
+				DebrisPrefab.BroadcastMessage("explode",AIAimPoint.position);
 
 				Destroy (gameObject);
 			}
