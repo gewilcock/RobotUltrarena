@@ -42,7 +42,7 @@ public class MechSpawnerScript : MonoBehaviour
                 handler.absThrottle = GameDataManagerScript.Instance.playerOptions.useAbsoluteThrottle;
 
                 Invoke("SpawnHUD", 0.1f);
-
+                UpdatePerimeterWalls(newMech);
             }
             else
             {
@@ -63,6 +63,14 @@ public class MechSpawnerScript : MonoBehaviour
             AddModules(mechData, weaponController);
 
         }
+    }
+
+    private void UpdatePerimeterWalls(GameObject newMech)
+    {
+        GameObject.Find("NorthWall").GetComponent<BarrierScript>().player = newMech.transform;
+        GameObject.Find("SouthWall").GetComponent<BarrierScript>().player = newMech.transform;
+        GameObject.Find("EastWall").GetComponent<BarrierScript>().player = newMech.transform;
+        GameObject.Find("WestWall").GetComponent<BarrierScript>().player = newMech.transform;
     }
 
     private void AddModules(MechData mechData, WeaponController wControl)
