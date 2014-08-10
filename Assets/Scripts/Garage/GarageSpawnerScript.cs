@@ -25,7 +25,7 @@ public class GarageSpawnerScript : MonoBehaviour {
 	{
 		if(newMech){GameObject.Destroy(newMech);}
 
-		MechData[] players = GameDataManagerScript.GameDataManager.players;
+		MechData[] players = GameDataManagerScript.Instance.players;
 
 		MechData weh = players[0];			
 

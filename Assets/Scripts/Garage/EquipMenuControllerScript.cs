@@ -271,7 +271,7 @@ public class EquipMenuControllerScript : MonoBehaviour
 					mechWeapons[w].libraryIndex = PrefabLibraryScript.Instance.weapons.Length - 1; 
 				}
 
-                GameDataManagerScript.GameDataManager.players[0].myWeapons[w] = PrefabLibraryScript.Instance.getWeapon(mechWeapons[w].libraryIndex);
+                GameDataManagerScript.Instance.players[0].myWeapons[w] = PrefabLibraryScript.Instance.getWeapon(mechWeapons[w].libraryIndex);
             }
         }
 
@@ -285,7 +285,7 @@ public class EquipMenuControllerScript : MonoBehaviour
                 if (mechHeavyWeapons[w].libraryIndex < -1) { mechHeavyWeapons[w].libraryIndex = PrefabLibraryScript.Instance.heavyWeapons.Length - 1; }
 
 
-                GameDataManagerScript.GameDataManager.players[0].myHeavyWeapons[w] = PrefabLibraryScript.Instance.getHeavyWeapon(mechHeavyWeapons[w].libraryIndex);
+                GameDataManagerScript.Instance.players[0].myHeavyWeapons[w] = PrefabLibraryScript.Instance.getHeavyWeapon(mechHeavyWeapons[w].libraryIndex);
             }
         }
 
@@ -300,7 +300,7 @@ public class EquipMenuControllerScript : MonoBehaviour
                 if (mechModules[w].libraryIndex < -1) { mechModules[w].libraryIndex = PrefabLibraryScript.Instance.abilityModules.Length - 1; }
 
 
-                GameDataManagerScript.GameDataManager.players[0].myModules[w] = PrefabLibraryScript.Instance.getAbilityModule(mechModules[w].libraryIndex);
+                GameDataManagerScript.Instance.players[0].myModules[w] = PrefabLibraryScript.Instance.getAbilityModule(mechModules[w].libraryIndex);
             }
         }
 

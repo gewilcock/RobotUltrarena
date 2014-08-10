@@ -47,15 +47,15 @@ public class PlaceholderMenuScript : MonoBehaviour {
 		if(GUI.Button (new Rect(350,490,100,50),"Start Game!")){
 
 			if(throttleSetting==0){
-			GameDataManagerScript.GameDataManager.playerOptions.useAbsoluteThrottle=true;
+			GameDataManagerScript.Instance.playerOptions.useAbsoluteThrottle=true;
 			}
 			else{
-				GameDataManagerScript.GameDataManager.playerOptions.useAbsoluteThrottle=false;
+				GameDataManagerScript.Instance.playerOptions.useAbsoluteThrottle=false;
 			}
 
-			GameDataManagerScript.GameDataManager.players[0].myHeavyWeapons[0]=PrefabLibraryScript.Instance.getHeavyWeapon(hWSetting);
-			GameDataManagerScript.GameDataManager.players[0].myModules[0]=PrefabLibraryScript.Instance.getAbilityModule(moduleSetting);
-			GameDataManagerScript.GameDataManager.players[0].myMech=PrefabLibraryScript.Instance.getMechChassis(selectedMech);
+			GameDataManagerScript.Instance.players[0].myHeavyWeapons[0]=PrefabLibraryScript.Instance.getHeavyWeapon(hWSetting);
+			GameDataManagerScript.Instance.players[0].myModules[0]=PrefabLibraryScript.Instance.getAbilityModule(moduleSetting);
+			GameDataManagerScript.Instance.players[0].myMech=PrefabLibraryScript.Instance.getMechChassis(selectedMech);
 
 			Application.LoadLevel (1);
 		}
