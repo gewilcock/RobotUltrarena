@@ -5,7 +5,7 @@ public class UITorsoTwistIndicatorScript : MonoBehaviour {
 	MechController mControl;
 	// Use this for initialization
 	void Start () {
-		mControl=MechInputHandler.playerController.GetComponentInChildren<MechController>();
+		mControl=PlayerInputHandler.Instance.GetComponentInChildren<MechController>();
 	}
 	
 	// Update is called once per frame

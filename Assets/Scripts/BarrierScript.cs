@@ -4,6 +4,7 @@ using System.Collections;
 public class BarrierScript : MonoBehaviour {
 
 	public Transform player;
+    public float alpha;
 	
 	public enum Placement
 	{
@@ -46,9 +47,6 @@ public class BarrierScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		
-		float alpha = 0.0f;
 		
 		switch (placement)
 		{

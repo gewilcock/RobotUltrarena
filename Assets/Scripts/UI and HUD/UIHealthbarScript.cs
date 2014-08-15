@@ -16,8 +16,8 @@ public class UIHealthbarScript : MonoBehaviour {
 		transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
 		transform.localEulerAngles=new Vector3(transform.localEulerAngles.x,0,0);
 		baseColor=healthBarBase.renderer.material.color;
-		mControl=MechInputHandler.playerController.GetComponentInChildren<MechController>();
-		wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>();
+		mControl=PlayerInputHandler.Instance.GetComponentInChildren<MechController>();
+		wControl=PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>();
 	}
 	
 	// Update is called once per frame

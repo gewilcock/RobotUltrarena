@@ -1,65 +1,71 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HUDThrottleScript : MonoBehaviour {
-	MechController mController;
-	WeaponController wController;
-	ProgressBarScript throttleBar;
-	TextMesh speedText;
-	public Transform throttleBase;
-	public Color overheatColour;
+public class HUDThrottleScript : MonoBehaviour
+{
+    MechController mController;
+    WeaponController wController;
+    ProgressBarScript throttleBar;
+    TextMesh speedText;
+    public Transform throttleBase;
+    public Color overheatColour;
 
-	CharacterController cController;
+    CharacterController cController;
 
-	float speedTick;
+    float speedTick;
 
-	float lastSpeed;
+    float lastSpeed;
 
-	Color baseColour;
+    Color baseColour;
 
-	// Use this for initialization
-	void Start() {
-		MechInputHandler myHandler=MechInputHandler.playerController;
-		
-		transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
-		transform.Rotate (transform.localEulerAngles.x,0,90f);
-		
-		mController=myHandler.mControl;
-		wController=myHandler.wControl;
-		throttleBar=GetComponentInChildren <ProgressBarScript>();
-		baseColour=throttleBase.renderer.material.color;
+    // Use this for initialization
+    void Start()
+    {
+        PlayerInputHandler myHandler = PlayerInputHandler.Instance;
 
-		cController=myHandler.transform.GetComponent<CharacterController>();
+        transform.rotation = Quaternion.LookRotation(transform.position - transform.parent.transform.position);
+        transform.Rotate(transform.localEulerAngles.x, 0, 90f);
 
-		speedText=GetComponentInChildren<TextMesh>();
+        mController = myHandler.mechController;
+        wController = myHandler.weaponController;
+        throttleBar = GetComponentInChildren<ProgressBarScript>();
+        baseColour = throttleBase.renderer.material.color;
 
-		lastSpeed = cController.velocity.magnitude;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        cController = myHandler.transform.GetComponent<CharacterController>();
 
-		throttleBar.fillRatio=mController.GetThrottleLevel();
+        speedText = GetComponentInChildren<TextMesh>();
 
-		if(wController.isOverheating){
-			throttleBase.renderer.material.color=overheatColour;
-		}
-		else{
-			throttleBase.renderer.material.color=baseColour;
-		}
+        lastSpeed = cController.velocity.magnitude;
+    }
 
-		if(speedTick<Time.time){
+    // Update is called once per frame
+    void Update()
+    {
 
-			float deltaV = cController.velocity.magnitude - lastSpeed;
-			lastSpeed = cController.velocity.magnitude;
+        throttleBar.fillRatio = mController.GetThrottleLevel();
 
-			float speed = Mathf.Round (cController.velocity.magnitude*3.6f);
-			speedText.text=speed.ToString ()+" km/h";
-			/*speedText.text+=" - dV: "+deltaV.ToString();*/
-			speedTick=Time.time+0.5f;
+        if (wController.isOverheating)
+        {
+            throttleBase.renderer.material.color = overheatColour;
+        }
+        else
+        {
+            throttleBase.renderer.material.color = baseColour;
+        }
+
+        if (speedTick < Time.time)
+        {
+
+            float deltaV = cController.velocity.magnitude - lastSpeed;
+            lastSpeed = cController.velocity.magnitude;
+
+            float speed = Mathf.Round(cController.velocity.magnitude * 3.6f);
+            speedText.text = speed.ToString() + " km/h";
+            /*speedText.text+=" - dV: "+deltaV.ToString();*/
+            speedTick = Time.time + 0.5f;
 
 
-		}
-	}
+        }
+    }
 
 }

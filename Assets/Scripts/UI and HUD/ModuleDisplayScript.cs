@@ -17,12 +17,12 @@ public class ModuleDisplayScript : MonoBehaviour
     void Start()
     {
 
-        wControl = MechInputHandler.playerController.GetComponentInChildren<WeaponController>();
+        wControl = PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>();
 
         modControl = null;
 
-        if (moduleIndex < MechInputHandler.playerController.GetComponentInChildren<WeaponController>().moduleList.Length)
-            modControl = MechInputHandler.playerController.GetComponentInChildren<WeaponController>().moduleList[moduleIndex];
+        if (moduleIndex < PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>().moduleList.Length)
+            modControl = PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>().moduleList[moduleIndex];
 
         if (modControl == null)
         {

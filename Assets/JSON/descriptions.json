@@ -7,5 +7,6 @@
 "Heavy Laser":"Medium-range, high-accuracy beam weapon.\nDeals heavy damage over time.",
 "Shotgun":"High-spread, slow-firing ballistic weapon.\nLethal at close range.",
 "Dumb Missile":"Missile swarm with rudimentary guidance\nsteers to where it is aimed on launch.",
-"Homing Missile":"Missile swarm with smarter guidance steers\nto a target locked by the pilot before launch."
+"Homing Missile": "Missile swarm with smarter guidance steers\nto a target locked by the pilot before launch.",
+"Small Rockets":"Hell yeah"
 }

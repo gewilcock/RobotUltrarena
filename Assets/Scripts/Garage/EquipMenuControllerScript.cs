@@ -131,7 +131,7 @@ public class EquipMenuControllerScript : MonoBehaviour
         else
             Weaponname.text = namestring.Substring(0, namestring.Length - 7);
 
-        Weaponstats.text = PrefabLibraryScript.library.getDescription(Weaponname.text) + "\n\n" + statistics;
+        Weaponstats.text = PrefabLibraryScript.Instance.getDescription(Weaponname.text) + "\n\n" + statistics;
 
 
     }
@@ -174,13 +174,22 @@ public class EquipMenuControllerScript : MonoBehaviour
 
     void populateSlots()
     {
+        AddLightWeapons();
+        
+        AddHeavyWeapons();
+
+        AddAbilityModules();
+    }
+    
+    private void AddLightWeapons()
+    {
         for (int w = 0; w < GarageSpawnerScript.Spawner.wControl.weaponList.Length; w++)
         {
-            for (int l = 0; l < PrefabLibraryScript.library.weapons.Length; l++)
+            for (int l = 0; l < PrefabLibraryScript.Instance.weapons.Length; l++)
             {
                 if (GarageSpawnerScript.Spawner.wControl.weaponList[w] != null)
                 {
-                    if (GarageSpawnerScript.Spawner.wControl.weaponList[w].gameObject.name.IndexOf(PrefabLibraryScript.library.weapons[l].name) > -1)
+                    if (GarageSpawnerScript.Spawner.wControl.weaponList[w].gameObject.name.IndexOf(PrefabLibraryScript.Instance.weapons[l].name) > -1)
                     {
                         mechWeapons[w].libraryIndex = l;
                         mechWeapons[w].weaponNameLabel.text = GarageSpawnerScript.Spawner.wControl.weaponList[w].weaponName;
@@ -194,14 +203,17 @@ public class EquipMenuControllerScript : MonoBehaviour
                 }
             }
         }
-
+    }
+    
+    private void AddHeavyWeapons()
+    {
         for (int w = 0; w < GarageSpawnerScript.Spawner.wControl.heavyWeaponList.Length; w++)
         {
-            for (int l = 0; l < PrefabLibraryScript.library.heavyWeapons.Length; l++)
+            for (int l = 0; l < PrefabLibraryScript.Instance.heavyWeapons.Length; l++)
             {
                 if (GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w] != null)
                 {
-                    if (GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].gameObject.name.IndexOf(PrefabLibraryScript.library.heavyWeapons[l].name) > -1)
+                    if (GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].gameObject.name.IndexOf(PrefabLibraryScript.Instance.heavyWeapons[l].name) > -1)
                     {
                         mechHeavyWeapons[w].libraryIndex = l;
                         mechHeavyWeapons[w].weaponNameLabel.text = GarageSpawnerScript.Spawner.wControl.heavyWeaponList[w].weaponName;
@@ -215,14 +227,17 @@ public class EquipMenuControllerScript : MonoBehaviour
                 }
             }
         }
-
+    }
+    
+    private void AddAbilityModules()
+    {
         for (int m = 0; m < GarageSpawnerScript.Spawner.wControl.moduleList.Length; m++)
         {
-            for (int l = 0; l < PrefabLibraryScript.library.abilityModules.Length; l++)
+            for (int l = 0; l < PrefabLibraryScript.Instance.abilityModules.Length; l++)
             {
                 if (GarageSpawnerScript.Spawner.wControl.moduleList[m] != null)
                 {
-                    if (GarageSpawnerScript.Spawner.wControl.moduleList[m].gameObject.name.IndexOf(PrefabLibraryScript.library.abilityModules[l].name) > -1)
+                    if (GarageSpawnerScript.Spawner.wControl.moduleList[m].gameObject.name.IndexOf(PrefabLibraryScript.Instance.abilityModules[l].name) > -1)
                     {
                         mechModules[m].libraryIndex = l;
                         mechModules[m].weaponNameLabel.text = GarageSpawnerScript.Spawner.wControl.moduleList[m].moduleName;
@@ -235,7 +250,6 @@ public class EquipMenuControllerScript : MonoBehaviour
                     mechModules[m].weaponNameLabel.characterSize = 0.08f;
                 }
             }
-
         }
     }
 
@@ -247,17 +261,17 @@ public class EquipMenuControllerScript : MonoBehaviour
             {
                 mechWeapons[w].libraryIndex += shiftdirection;
 
-                if (mechWeapons[w].libraryIndex > PrefabLibraryScript.library.weapons.Length - 1) 
+                if (mechWeapons[w].libraryIndex > PrefabLibraryScript.Instance.weapons.Length - 1) 
 				{ 
 					mechWeapons[w].libraryIndex = -1; 
 				}
 
                 if (mechWeapons[w].libraryIndex < -1) 
 				{ 
-					mechWeapons[w].libraryIndex = PrefabLibraryScript.library.weapons.Length - 1; 
+					mechWeapons[w].libraryIndex = PrefabLibraryScript.Instance.weapons.Length - 1; 
 				}
 
-                GameDataManagerScript.GameDataManager.players[0].myWeapons[w] = PrefabLibraryScript.library.getWeapon(mechWeapons[w].libraryIndex);
+                GameDataManagerScript.Instance.players[0].myWeapons[w] = PrefabLibraryScript.Instance.getWeapon(mechWeapons[w].libraryIndex);
             }
         }
 
@@ -267,11 +281,11 @@ public class EquipMenuControllerScript : MonoBehaviour
             {
                 mechHeavyWeapons[w].libraryIndex += shiftdirection;
 
-                if (mechHeavyWeapons[w].libraryIndex > PrefabLibraryScript.library.heavyWeapons.Length - 1) { mechHeavyWeapons[w].libraryIndex = -1; }
-                if (mechHeavyWeapons[w].libraryIndex < -1) { mechHeavyWeapons[w].libraryIndex = PrefabLibraryScript.library.heavyWeapons.Length - 1; }
+                if (mechHeavyWeapons[w].libraryIndex > PrefabLibraryScript.Instance.heavyWeapons.Length - 1) { mechHeavyWeapons[w].libraryIndex = -1; }
+                if (mechHeavyWeapons[w].libraryIndex < -1) { mechHeavyWeapons[w].libraryIndex = PrefabLibraryScript.Instance.heavyWeapons.Length - 1; }
 
 
-                GameDataManagerScript.GameDataManager.players[0].myHeavyWeapons[w] = PrefabLibraryScript.library.getHeavyWeapon(mechHeavyWeapons[w].libraryIndex);
+                GameDataManagerScript.Instance.players[0].myHeavyWeapons[w] = PrefabLibraryScript.Instance.getHeavyWeapon(mechHeavyWeapons[w].libraryIndex);
             }
         }
 
@@ -282,11 +296,11 @@ public class EquipMenuControllerScript : MonoBehaviour
 
                 mechModules[w].libraryIndex += shiftdirection;
 
-                if (mechModules[w].libraryIndex > PrefabLibraryScript.library.abilityModules.Length - 1) { mechModules[w].libraryIndex = -1; }
-                if (mechModules[w].libraryIndex < -1) { mechModules[w].libraryIndex = PrefabLibraryScript.library.abilityModules.Length - 1; }
+                if (mechModules[w].libraryIndex > PrefabLibraryScript.Instance.abilityModules.Length - 1) { mechModules[w].libraryIndex = -1; }
+                if (mechModules[w].libraryIndex < -1) { mechModules[w].libraryIndex = PrefabLibraryScript.Instance.abilityModules.Length - 1; }
 
 
-                GameDataManagerScript.GameDataManager.players[0].myModules[w] = PrefabLibraryScript.library.getAbilityModule(mechModules[w].libraryIndex);
+                GameDataManagerScript.Instance.players[0].myModules[w] = PrefabLibraryScript.Instance.getAbilityModule(mechModules[w].libraryIndex);
             }
         }
 
