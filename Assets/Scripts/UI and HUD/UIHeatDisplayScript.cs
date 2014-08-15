@@ -14,7 +14,7 @@ public class UIHeatDisplayScript : MonoBehaviour {
 		transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
 		transform.localEulerAngles=new Vector3(transform.localEulerAngles.x,0,0);
 		baseColor=heatBarBase.renderer.material.color;
-		wControl=MechInputHandler.playerController.wControl;
+		wControl=PlayerInputHandler.Instance.weaponController;
 	}
 	
 	// Update is called once per frame

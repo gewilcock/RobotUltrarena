@@ -1,62 +1,68 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HUDCameraLagScript : MonoBehaviour {
-	Transform torsoBone;
-	Transform mechTransform;
-	float prevRotation;
-	float newRotation;
+public class HUDCameraLagScript : MonoBehaviour
+{
+    Transform torsoBone;
+    Transform mechTransform;
+    float prevRotation;
+    float newRotation;
 
-	float prevHeight;
-	float currentHeight;
-	public float heightBobLimits=0.2f;
+    float prevHeight;
+    float currentHeight;
+    public float heightBobLimits = 0.2f;
 
-	public float lagMultiplier;
-	float difference;
+    public float lagMultiplier;
+    float difference;
 
-	// Use this for initialization
-	void Start () {
-		mechTransform=MechInputHandler.playerController.mControl.transform;
-		torsoBone=MechInputHandler.playerController.mControl.torsoBone;
-		prevRotation=torsoBone.localRotation.eulerAngles.x-mechTransform.localRotation.eulerAngles.y;
-		prevHeight=torsoBone.position.y;
+    // Use this for initialization
+    void Start()
+    {
+        mechTransform = PlayerInputHandler.Instance.mechController.transform;
+        torsoBone = PlayerInputHandler.Instance.mechController.torsoBone;
+        prevRotation = torsoBone.localRotation.eulerAngles.x - mechTransform.localRotation.eulerAngles.y;
+        prevHeight = torsoBone.position.y;
 
-		currentHeight=0;
-	}
-	
-	// Update is called once per frame
-	void LateUpdate () {
+        currentHeight = 0;
+    }
 
-		newRotation=lagMultiplier*(torsoBone.localRotation.eulerAngles.x-mechTransform.rotation.eulerAngles.y);
+    // Update is called once per frame
+    void LateUpdate()
+    {
 
-		difference = (newRotation-prevRotation);
+        newRotation = lagMultiplier * (torsoBone.localRotation.eulerAngles.x - mechTransform.rotation.eulerAngles.y);
 
-		Quaternion diffRotation = Quaternion.Euler(new Vector3(0f,difference,0f));
+        difference = (newRotation - prevRotation);
 
-		Quaternion final = Quaternion.Slerp (transform.localRotation,diffRotation,Time.deltaTime);
+        Quaternion diffRotation = Quaternion.Euler(new Vector3(0f, difference, 0f));
 
-		transform.localRotation=final;
+        Quaternion final = Quaternion.Slerp(transform.localRotation, diffRotation, Time.deltaTime);
 
-		prevRotation=newRotation;
+        transform.localRotation = final;
 
-
-		if(torsoBone.position.y>prevHeight){
-			currentHeight=Mathf.Lerp (currentHeight,-heightBobLimits,0.01f);
-
-		}
-		else if(torsoBone.position.y<prevHeight){
-			currentHeight=Mathf.Lerp (currentHeight,heightBobLimits,Time.deltaTime*3f);
-		}
-		else{
-			currentHeight=Mathf.Lerp (currentHeight,0,Time.deltaTime*3f);
-		}
+        prevRotation = newRotation;
 
 
+        if (torsoBone.position.y > prevHeight)
+        {
+            currentHeight = Mathf.Lerp(currentHeight, -heightBobLimits, 0.01f);
 
-		prevHeight=torsoBone.position.y;
+        }
+        else if (torsoBone.position.y < prevHeight)
+        {
+            currentHeight = Mathf.Lerp(currentHeight, heightBobLimits, Time.deltaTime * 3f);
+        }
+        else
+        {
+            currentHeight = Mathf.Lerp(currentHeight, 0, Time.deltaTime * 3f);
+        }
 
-		transform.localPosition=new Vector3(0,currentHeight,0);
 
-	}
+
+        prevHeight = torsoBone.position.y;
+
+        transform.localPosition = new Vector3(0, currentHeight, 0);
+
+    }
 
 }

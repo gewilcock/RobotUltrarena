@@ -24,7 +24,7 @@ public class WeaponDisplayScript : MonoBehaviour {
 		lockOnReticle = null;
 
 		if(isHeavyWeapon){
-			var heavyWeaponList = MechInputHandler.playerController.GetComponentInChildren<WeaponController>().heavyWeaponList;
+			var heavyWeaponList = PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>().heavyWeaponList;
 
 			if(weaponIndex >= heavyWeaponList.Length)
 				Destroy (gameObject);
@@ -32,7 +32,7 @@ public class WeaponDisplayScript : MonoBehaviour {
 				wControl = heavyWeaponList[weaponIndex];
 		}
 		else{
-			var weaponList = MechInputHandler.playerController.GetComponentInChildren<WeaponController>().weaponList;
+			var weaponList = PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>().weaponList;
 
 			if(weaponIndex >= weaponList.Length)
 				Destroy (gameObject);
@@ -70,7 +70,7 @@ public class WeaponDisplayScript : MonoBehaviour {
 
 	void ScaleBars(){
 		heatDisplay.fillRatio=wControl.heatRatio;
-		refireDisplay.fillRatio=wControl.refireRatio;
+		refireDisplay.fillRatio=wControl.reloadPercentage;
 
 	}
 

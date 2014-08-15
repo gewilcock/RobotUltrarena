@@ -15,7 +15,7 @@ public class UIEnergyDisplayScript : MonoBehaviour {
 		transform.rotation=Quaternion.LookRotation (transform.position-transform.parent.transform.position);
 		transform.localEulerAngles=new Vector3(transform.localEulerAngles.x,0,0);
 		baseColor=energyBarBase.renderer.material.color;
-		wControl=MechInputHandler.playerController.GetComponentInChildren<WeaponController>();
+		wControl=PlayerInputHandler.Instance.GetComponentInChildren<WeaponController>();
 	}
 	
 	// Update is called once per frame

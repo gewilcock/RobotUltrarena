@@ -26,43 +26,65 @@ public class MechSpawnerScript : MonoBehaviour
 
     public void SpawnPlayers()
     {
+        var players = GameDataManagerScript.Instance.players;
 
-        MechData[] players = GameDataManagerScript.Instance.players;
-
-        foreach (MechData mechData in players)
+        foreach (MechData playerMechData in players)
         {
             GameObject newMech;
 
-            if (mechData.isPlayer)
+            if (playerMechData.isPlayer)
             {
-                Instantiate(PlayerCameraPrefab, Vector3.zero, Quaternion.identity);
-                newMech = (GameObject)Instantiate(mechData.myMech, playerStartingLocation.position, playerStartingLocation.rotation);
-                MechInputHandler handler = (MechInputHandler)newMech.AddComponent("MechInputHandler");
-
-                handler.absThrottle = GameDataManagerScript.Instance.playerOptions.useAbsoluteThrottle;
-
-                Invoke("SpawnHUD", 0.1f);
-                UpdatePerimeterWalls(newMech);
+                newMech = SetupPlayer(playerMechData);
             }
             else
             {
-                newMech = (GameObject)Instantiate(mechData.myMech, new Vector3(UnityEngine.Random.Range(30, 2200), 500, UnityEngine.Random.Range(30, 2200)), Quaternion.identity);
-                newMech.AddComponent("MechAIHandler");
-
+                newMech = SetupAI(playerMechData);              
             }
-            RaycastHit groundhit;
-            Physics.Raycast(newMech.transform.position, Vector3.down, out groundhit, 1000f);
-            newMech.transform.position = groundhit.point;
+
+            MoveMechToTouchGround(newMech);
 
             WeaponController weaponController = newMech.GetComponent<WeaponController>();
 
-            AddLightWeapons(mechData, weaponController);
+            AddLightWeapons(playerMechData, weaponController);
 
-            AddHeavyWeapons(mechData, weaponController);
+            AddHeavyWeapons(playerMechData, weaponController);
 
-            AddModules(mechData, weaponController);
+            AddModules(playerMechData, weaponController);
 
         }
+    }
+
+    private static void MoveMechToTouchGround(GameObject newMech)
+    {
+        RaycastHit groundhit;
+        Physics.Raycast(newMech.transform.position, Vector3.down, out groundhit, 1000f);
+        newMech.transform.position = groundhit.point;
+    }
+
+    private static GameObject SetupAI(MechData playerMechData)
+    {
+        GameObject newMech;
+        newMech = (GameObject)Instantiate(playerMechData.mechPrefab, new Vector3(UnityEngine.Random.Range(30, 2200), 500, UnityEngine.Random.Range(30, 2200)), Quaternion.identity);
+        newMech.GetComponent<MechController>().CallSign = playerMechData.callSign;
+
+        newMech.AddComponent("AIInputHandler");
+        return newMech;
+    }
+
+    private GameObject SetupPlayer(MechData playerMechData)
+    {
+        GameObject newMech;
+        Instantiate(PlayerCameraPrefab, Vector3.zero, Quaternion.identity);
+        newMech = (GameObject)Instantiate(playerMechData.mechPrefab, playerStartingLocation.position, playerStartingLocation.rotation);
+        newMech.GetComponent<MechController>().CallSign = playerMechData.callSign;
+
+        var handler = (PlayerInputHandler)newMech.AddComponent("PlayerInputHandler");
+       // handler.absThrottle = GameDataManagerScript.Instance.playerOptions.useAbsoluteThrottle;
+
+
+        Invoke("SpawnHUD", 0.1f);
+        UpdatePerimeterWalls(newMech);
+        return newMech;
     }
 
     private void UpdatePerimeterWalls(GameObject newMech)

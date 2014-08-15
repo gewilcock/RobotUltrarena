@@ -35,7 +35,7 @@ public class ChassisMenuControllerScript : MonoBehaviour
         else if (mechIndex == PrefabLibraryScript.Instance.mechChassis.Length)
             mechIndex = 0;
 
-        GameDataManagerScript.Instance.players[0].myMech = PrefabLibraryScript.Instance.mechChassis[mechIndex];
+        GameDataManagerScript.Instance.players[0].mechPrefab = PrefabLibraryScript.Instance.mechChassis[mechIndex];
 
     }
 

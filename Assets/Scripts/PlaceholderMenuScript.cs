@@ -55,7 +55,7 @@ public class PlaceholderMenuScript : MonoBehaviour {
 
 			GameDataManagerScript.Instance.players[0].myHeavyWeapons[0]=PrefabLibraryScript.Instance.getHeavyWeapon(hWSetting);
 			GameDataManagerScript.Instance.players[0].myModules[0]=PrefabLibraryScript.Instance.getAbilityModule(moduleSetting);
-			GameDataManagerScript.Instance.players[0].myMech=PrefabLibraryScript.Instance.getMechChassis(selectedMech);
+			GameDataManagerScript.Instance.players[0].mechPrefab=PrefabLibraryScript.Instance.getMechChassis(selectedMech);
 
 			Application.LoadLevel (1);
 		}

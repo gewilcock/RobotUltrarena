@@ -29,7 +29,7 @@ public class GarageSpawnerScript : MonoBehaviour {
 
 		MechData weh = players[0];			
 
-		newMech = (GameObject)Instantiate(weh.myMech,transform.position,transform.rotation);			
+		newMech = (GameObject)Instantiate(weh.mechPrefab,transform.position,transform.rotation);			
 
 		newMech.transform.parent = transform;
 				
