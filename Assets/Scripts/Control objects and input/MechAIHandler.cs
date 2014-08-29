@@ -239,7 +239,7 @@ public class MechAIHandler : MonoBehaviour {
 			//Debug.Log ("Scanning tick");
 			bool findtarget=false;
 
-			if(myTarget!=null){
+			/*if(myTarget!=null){
 				//Debug.Log ("I already have a target");
 
 				if(myTarget.isDead)
@@ -266,10 +266,10 @@ public class MechAIHandler : MonoBehaviour {
 					targetingTimeout=0; 
 				}
 			}
-			else{
+			else{*/
 			
 				findtarget=true;
-			}
+			//}
 
 			if(findtarget){
 				myTarget=null;
@@ -350,8 +350,8 @@ public class MechAIHandler : MonoBehaviour {
 		{
 			if(hasCombatAITicked)
 			{
-				wControl.StopAllWeapons ();
-				if(wControl.heatRatio<0.8f)
+				wControl.StopStandardWeapons ();
+				if(wControl.heatRatio<0.9f)
 				{
 					if((wControl.inFireCone)&&(hit))
 					{
@@ -368,8 +368,7 @@ public class MechAIHandler : MonoBehaviour {
 										{
 											if((wControl.aimTag[q/2] == "DamageObject")&&(wControl.aimRange[q/2]<=wControl.weaponList[q+r].weaponRange) && (wControl.aimRange[q/2]>=wControl.weaponList[q+r].weaponSafetyRange))
 												wControl.weaponList[q+r].isActive = true;
-											else
-												wControl.weaponList[q+r].isActive = false;
+											
 										}
 									}
 								}

@@ -241,6 +241,15 @@ public class WeaponController : MonoBehaviour {
 		
 	}
 
+	public void StopStandardWeapons()
+	{
+		for(int i=0; i<weaponList.Length;i++){
+			if(weaponList[i]!=null){
+				weaponList[i].triggered=false;
+			}
+		}
+	}
+
 	public void setHeavyWeaponTrigger(bool triggerstate,int weaponGroup){
 		if(heavyWeaponList[weaponGroup]!=null){
 			heavyWeaponList[weaponGroup].triggered=triggerstate;

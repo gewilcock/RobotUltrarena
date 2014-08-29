@@ -28,6 +28,7 @@ public class WeaponScript : MonoBehaviour {
 	public float weaponSafetyRange; //Minimum range at which the weapon would be safely fired, so that AI doesn't blow itself up.
 	public bool canFire{get; protected set;}
 
+	public MonoBehaviour customAI;
 
 	//General refire variables
 	public float refireTime;
@@ -151,7 +152,7 @@ public class WeaponScript : MonoBehaviour {
 		if((!isOverheating)&&(!myController.isOverheating)){
 				if(Time.time>=nextFireTime){
 					if((ammoMaxLevel==0) || ((ammoMaxLevel>0) && (ammoLevel>0))){
-						if((energyPerShot==0) || ((energyPerShot>0) && (myController.energyLevel>0))){
+						if((energyPerShot==0) || ((energyPerShot>0) && (myController.energyLevel>=energyPerShot))){
 							return true;
 						}
 					}
@@ -207,7 +208,8 @@ public class WeaponScript : MonoBehaviour {
 				fireSound.Play();
 
 			}
-			if((!triggered || isOverheating) && (fireSound.loop))
+
+			if((ammoMaxLevel>0 && ammoLevel==0)||(!triggered || isOverheating) && (fireSound.loop))
 				fireSound.Stop ();
 		}
 	}

@@ -133,6 +133,7 @@ ModelImporter:
     7400000: Stationary
     7400002: Walk
     7400004: Death
+    7400006: Run
     9500000: //RootNode
     11100000: //RootNode
     13700000: Cube.003
@@ -156,8 +157,8 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Walk
-      takeName: Walk
+      name: Run
+      takeName: Run
       firstFrame: 0
       lastFrame: 20
       wrapMode: 2

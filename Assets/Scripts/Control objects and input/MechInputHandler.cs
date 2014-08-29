@@ -64,7 +64,7 @@ public class MechInputHandler : MonoBehaviour {
 		Camera.main.transform.localPosition=new Vector3(-8f,0,-20);
 		Camera.main.transform.localEulerAngles=new Vector3(0f,0f,90f);
 
-		radarCam.transform.position = new Vector3(transform.position.x,radarCam.transform.position.y,transform.position.z);
+		radarCam.transform.position = new Vector3(transform.position.x,800f,transform.position.z);
 		radarCam.transform.parent=mControl.torsoBone;
 
 		transform.FindChild("RadarBlip").renderer.material.color = Color.green;
@@ -241,7 +241,13 @@ public class MechInputHandler : MonoBehaviour {
 	void MouseAim(){
 
 		aimRay=Camera.main.ScreenPointToRay(Input.mousePosition);
-		bool hit=Physics.Raycast(aimRay, out targetHit,MAX_AIM_DISTANCE,(playerMask));
+
+		bool hit;
+		if(!isCockpitView)
+			hit=Physics.Raycast(aimRay.GetPoint(15f),aimRay.direction, out targetHit,MAX_AIM_DISTANCE,(playerMask));
+		else
+			hit=Physics.Raycast(aimRay, out targetHit,MAX_AIM_DISTANCE,(playerMask));
+
 		isShootyTarget=false;
 
 		if(hit){

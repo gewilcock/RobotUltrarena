@@ -12,6 +12,10 @@ public class ExplosionScript : MonoBehaviour {
 
 	public Transform visibleShock;
 
+	public GameObject scorchEffect;
+
+	Projector scorchProjector;
+
 	AudioSource mySound;
 
 	float shockDeath;
@@ -31,6 +35,10 @@ public class ExplosionScript : MonoBehaviour {
 		mySound = transform.GetComponent<AudioSource>();
 		mySound.pitch = Random.Range (0.7f,1.3f);
 		mySound.Play ();
+
+		GameObject scorch = (GameObject)Instantiate (scorchEffect,transform.position+Vector3.up*80,Quaternion.AngleAxis (-90,Vector3.left));
+		scorchProjector = scorch.GetComponent<Projector>();
+		scorchProjector.orthographicSize = maxRadius/2;
 	}
 	
 	// Update is called once per frame

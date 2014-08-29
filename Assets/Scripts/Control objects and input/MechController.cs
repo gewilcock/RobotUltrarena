@@ -52,6 +52,8 @@ public class MechController : MonoBehaviour {
 	public float collisionDamageSpeedRatio = 0.5f;
 	public float collisionDamageMax = 10f;
 
+	float spawnProtection = 1f;
+
 	//Specialised variables for modules
 	public bool isShielded{get;set;}
 	public float damageDampening{get;set;} //used for any damage dampening - armour, shields, whatever.
@@ -75,6 +77,8 @@ public class MechController : MonoBehaviour {
 	speedModifier = 0;
 	turnModifier = 0;
 	damageVector = Vector3.zero;
+
+	spawnProtection +=Time.time;
 			
 	animations.Play ("Stationary");
 
@@ -134,8 +138,8 @@ public class MechController : MonoBehaviour {
 					animations.CrossFade ("Stationary",0.5f);
 				}
 				else{
-				if(!animations.IsPlaying("Walk")){animations.CrossFade ("Walk",2f);}
-					animations["Walk"].speed = 0.3f+mechMotor.movement.velocity.sqrMagnitude/Mathf.Pow (mechMotor.movement.maxForwardSpeed,2);
+				if(!animations.IsPlaying("Run")){animations.CrossFade ("Run",2f);}
+					animations["Run"].speed = 0.3f+mechMotor.movement.velocity.sqrMagnitude/Mathf.Pow (mechMotor.movement.maxForwardSpeed,2);
 				}
 			}
 			else{
@@ -180,30 +184,30 @@ public class MechController : MonoBehaviour {
 
 	public void CollisionDamageCheck()
 	{
-		float currentV = cControl.velocity.magnitude;
-		float deltaV = currentV-lastVelocity;
-		float hitDelta = mechMotor.movement.maxForwardSpeed*collisionDamageSpeedRatio;
+		if(spawnProtection<Time.time)
+		{
+			float currentV = cControl.velocity.magnitude;
+			float deltaV = currentV-lastVelocity;
+			float hitDelta = mechMotor.movement.maxForwardSpeed*collisionDamageSpeedRatio;
 
-		if(deltaV < 0)
-			if(Mathf.Abs (deltaV)>=hitDelta)
-			{
-				float collisionDamageTaken = collisionDamageMax*(Mathf.Abs (deltaV)-hitDelta)/hitDelta;
+			if(deltaV < 0)
+				if(Mathf.Abs (deltaV)>=hitDelta)
+				{
+					float collisionDamageTaken = collisionDamageMax*(Mathf.Abs (deltaV)-hitDelta)/hitDelta;
 
-				TakeDamage (new CollisionDataContainer(collisionDamageTaken,cControl.velocity,cControl.velocity.normalized));
+					TakeDamage (new CollisionDataContainer(collisionDamageTaken,cControl.velocity,cControl.velocity.normalized));
 
-			}
-
-		
-
-		
-		lastVelocity = currentV;
+				}		
+					
+			lastVelocity = currentV;
+		}
 	}
 
 	void AssessDamage(){
 
 
 		damageVector = Vector3.Lerp (damageVector,Vector3.zero,Time.deltaTime*2);
-		totalDamage = Mathf.Lerp (totalDamage,0,Time.deltaTime*2);
+		totalDamage = Mathf.Lerp (totalDamage,1,Time.deltaTime*2);
 
 
 
@@ -232,7 +236,7 @@ public class MechController : MonoBehaviour {
 			if(!animations.isPlaying){
 
 				Instantiate (deathExplosion,AIAimPoint.position,Quaternion.identity);
-				GameObject DebrisPrefab = (GameObject)Instantiate (debrisPrefab,AIAimPoint.position,transform.rotation);
+				GameObject DebrisPrefab = (GameObject)Instantiate (debrisPrefab,AIAimPoint.position,transform.rotation*Quaternion.AngleAxis(180,Vector3.up));
 				DebrisPrefab.BroadcastMessage("explode",AIAimPoint.position);
 
 				Destroy (gameObject);

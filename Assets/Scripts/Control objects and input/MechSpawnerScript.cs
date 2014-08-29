@@ -23,18 +23,29 @@ public class MechSpawnerScript : MonoBehaviour {
 	
 	}
 
-	public void SpawnPlayers(){
+	public void SpawnPlayers()
+	{
 
 		MechData[] players = GameDataManagerScript.GameDataManager.players;
+		float angleSlice = (Mathf.PI*2)/players.Length;
+		float startOffset = Random.Range(0f,2*Mathf.PI);
 
-		for(int i =0; i<players.Length;i++){
+		for(int i = 0; i<players.Length;i++)
+		{
+			float startAngle = startOffset+(angleSlice*i);
 
 			MechData weh = players[i];
 			GameObject newMech;
 
+			Vector3 startPoint = new Vector3 (1000+(900*Mathf.Cos (startAngle)),500,1000+(900*Mathf.Sin (startAngle)));
+			RaycastHit groundhit;
+			Physics.Raycast (startPoint,Vector3.down,out groundhit,1000f);
+			startPoint=groundhit.point+Vector3.up;
+
+
 			if(weh.isPlayer){
 				Instantiate (PlayerCameraPrefab,Vector3.zero,Quaternion.identity);
-				newMech = (GameObject)Instantiate(weh.myMech,new Vector3(50,500,50),Quaternion.identity);
+				newMech = (GameObject)Instantiate(weh.myMech,startPoint,Quaternion.identity);
 				MechInputHandler handler = (MechInputHandler)newMech.AddComponent ("MechInputHandler");
 
 				handler.absThrottle = GameDataManagerScript.GameDataManager.playerOptions.useAbsoluteThrottle;
@@ -43,13 +54,11 @@ public class MechSpawnerScript : MonoBehaviour {
 
 			}
 			else{
-				newMech = (GameObject)Instantiate (weh.myMech,new Vector3(UnityEngine.Random.Range (30,2200),500,UnityEngine.Random.Range(30,2200)),Quaternion.identity);
+				newMech = (GameObject)Instantiate (weh.myMech,startPoint,Quaternion.identity);
 				newMech.AddComponent ("MechAIHandler");
 
 			}
-			RaycastHit groundhit;
-			Physics.Raycast (newMech.transform.position,Vector3.down,out groundhit,1000f);
-			newMech.transform.position=groundhit.point;
+
 
 			WeaponController wControl = newMech.GetComponent<WeaponController>();
 
@@ -103,6 +112,8 @@ public class MechSpawnerScript : MonoBehaviour {
 					}
 				}
 			}
+
+
 
 		}
 	}
